@@ -16,14 +16,13 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body className="antialiased bg-background text-foreground">
+            <body className="antialiased bg-background text-foreground overflow-hidden">
                 <SidebarProvider>
                     <AppSidebar />
                     <div className="w-full">
                         <Header />
                         <div className="h-[calc(100vh-70px)] p-2">
-                            <main className="h-full rounded-xl bg-background border">{children}</main>
-
+                            <main className="h-full rounded-xl bg-background border overflow-auto">{children}</main>
                         </div>
                     </div>
                 </SidebarProvider>
@@ -35,7 +34,7 @@ export default function RootLayout({
 function Header() {
     return (
         <SidebarInset>
-            <header className={`flex h-[70px] shrink-0 items-end gap-2 bg-sidebar`}>
+            <header className="flex h-[70px] shrink-0 items-end gap-2 bg-sidebar">
                 <div className="flex items-center gap-2 px-4 pb-0.5">
                     <SidebarTrigger className="-ml-1 cursor-pointer" />
                     <Separator
