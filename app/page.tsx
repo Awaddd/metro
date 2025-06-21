@@ -3,7 +3,7 @@ import DonutChartWithText from "@/components/DonutChartWithText";
 import HorizontalBarChart from "@/components/HorizontalBarChart";
 import Panel from "@/components/Panel";
 import RadarChart from "@/components/RadarChart";
-import { LucideCalendarCheck, LucidePercentCircle, LucideSearch } from "lucide-react";
+import { LucideActivity, LucideCalendarCheck, LucidePercentCircle, LucideScanSearch, LucideSearch } from "lucide-react";
 
 export default function Home() {
     return (
@@ -12,7 +12,7 @@ export default function Home() {
                 <Panel label="Total Searches" value="128,732" icon={LucideSearch} />
                 <Panel label="This Month" value="4,932" icon={LucideCalendarCheck} />
                 <Panel label="Arrest Rate (%)" value="12.4%" icon={LucidePercentCircle} />
-                <Panel label="Arrest Rate (%)" value="12.4%" icon={LucidePercentCircle} />
+                <Panel label="Avg per Day" value="159" icon={LucideActivity} />
             </section>
 
             <section className="w-full flex flex-col xl:flex-row gap-4">
