@@ -1,5 +1,8 @@
 import Card from "@/components/Card";
+import DonutChartWithText from "@/components/DonutChartWithText";
+import HorizontalBarChart from "@/components/HorizontalBarChart";
 import Panel from "@/components/Panel";
+import RadarChart from "@/components/RadarChart";
 import { LucideCalendarCheck, LucidePercentCircle, LucideSearch } from "lucide-react";
 
 export default function Home() {
@@ -9,11 +12,13 @@ export default function Home() {
                 <Panel label="Total Searches" value="128,732" icon={LucideSearch} />
                 <Panel label="This Month" value="4,932" icon={LucideCalendarCheck} />
                 <Panel label="Arrest Rate (%)" value="12.4%" icon={LucidePercentCircle} />
+                <Panel label="Arrest Rate (%)" value="12.4%" icon={LucidePercentCircle} />
             </section>
 
             <section className="w-full flex flex-col xl:flex-row gap-4">
-                <Card />
-                <Card />
+                <HorizontalBarChart />
+                <DonutChartWithText />
+                <RadarChart />
             </section>
 
             <section className="w-full flex flex-col xl:flex-row gap-4">
