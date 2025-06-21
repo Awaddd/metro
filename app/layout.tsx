@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 const headerHeight = "80px"
-export const insetHeight = `h-[calc(100vh-${headerHeight})]`
+const insetHeight = `h-[calc(100vh-${headerHeight})]`
 
 export default function RootLayout({
     children,
@@ -22,10 +22,10 @@ export default function RootLayout({
             <body className="antialiased bg-background text-foreground">
                 <SidebarProvider>
                     <AppSidebar />
-                    <main className="w-full h-full">
+                    <div className="w-full">
                         <Header />
-                        {children}
-                    </main>
+                        <main className={insetHeight}>{children}</main>
+                    </div>
                 </SidebarProvider>
             </body>
         </html>
