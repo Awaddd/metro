@@ -21,8 +21,7 @@ export default function Home() {
                 <RadarChart />
             </section>
 
-            <section className="w-full flex flex-col xl:flex-row gap-4">
-                <Card />
+            <section className="w-full flex flex-grow flex-col xl:flex-row gap-4">
                 <Card />
             </section>
         </div>
