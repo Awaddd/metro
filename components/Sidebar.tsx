@@ -1,4 +1,4 @@
-import { BarChart3, Fingerprint, LayoutDashboard, Map, Settings, Table } from "lucide-react"
+import { BarChart3, Fingerprint, LayoutDashboard, LucideIcon, Map, Moon, Settings, Table } from "lucide-react"
 
 import {
     Sidebar,
@@ -11,36 +11,51 @@ import {
     SidebarMenuButton,
     SidebarMenuItem
 } from "@/components/ui/sidebar"
+import { Button } from "./ui/button"
 
-const generalItems = [
-    {
-        title: "Overview",
-        url: "#",
-        icon: LayoutDashboard,
-    },
-    {
-        title: "Trends",
-        url: "#",
-        icon: BarChart3,
-    },
-    {
-        title: "Map",
-        url: "#",
-        icon: Map,
-    },
-    {
-        title: "Table",
-        url: "#",
-        icon: Table,
-    },
-]
+type ApplicationSidebar = {
+    label: string
+    items: {
+        title: string
+        icon: LucideIcon
+        url?: string
+    }[]
+}
 
-const supportItems = [
+const groups: ApplicationSidebar[] = [
     {
-        title: "Settings",
-        url: "#",
-        icon: Settings,
+        label: "Application",
+        items: [{
+            title: "Overview",
+            url: "#",
+            icon: LayoutDashboard,
+        },
+        {
+            title: "Trends",
+            url: "#",
+            icon: BarChart3,
+        },
+        {
+            title: "Map",
+            url: "#",
+            icon: Map,
+        },
+        {
+            title: "Table",
+            url: "#",
+            icon: Table,
+        },
+        ]
     },
+    {
+        label: "Settings",
+        items: [
+            {
+                title: "Dark mode",
+                icon: Moon,
+            },
+        ]
+    }
 ]
 
 export default function () {
@@ -48,40 +63,30 @@ export default function () {
         <Sidebar variant="sidebar">
             <Header />
             <SidebarContent>
-                <SidebarGroup>
-                    <SidebarGroupLabel>Application</SidebarGroupLabel>
-                    <SidebarGroupContent>
+                {groups.map((group, index) => (
+                    <SidebarGroup key={index}>
+                        <SidebarGroupLabel>{group.label}</SidebarGroupLabel>
                         <SidebarMenu>
-                            {generalItems.map((item) => (
-                                <SidebarMenuItem key={item.title}>
+                            {group.items.map((item, itemIndex) => (
+                                <SidebarMenuItem key={itemIndex}>
                                     <SidebarMenuButton asChild>
-                                        <a href={item.url}>
-                                            <item.icon />
-                                            <span>{item.title}</span>
-                                        </a>
+                                        {item?.url ? (
+                                            <a href={item.url}>
+                                                <item.icon />
+                                                <span>{item.title}</span>
+                                            </a>
+                                        ) : (
+                                            <button className="cursor-pointer">
+                                                <item.icon />
+                                                <span>{item.title}</span>
+                                            </button>
+                                        )}
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
                             ))}
                         </SidebarMenu>
-                    </SidebarGroupContent>
-                </SidebarGroup>
-                <SidebarGroup>
-                    <SidebarGroupLabel>Support</SidebarGroupLabel>
-                    <SidebarGroupContent>
-                        <SidebarMenu>
-                            {supportItems.map((item) => (
-                                <SidebarMenuItem key={item.title}>
-                                    <SidebarMenuButton asChild>
-                                        <a href={item.url}>
-                                            <item.icon />
-                                            <span>{item.title}</span>
-                                        </a>
-                                    </SidebarMenuButton>
-                                </SidebarMenuItem>
-                            ))}
-                        </SidebarMenu>
-                    </SidebarGroupContent>
-                </SidebarGroup>
+                    </SidebarGroup>
+                ))}
             </SidebarContent>
         </Sidebar>
     )
