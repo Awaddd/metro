@@ -13,7 +13,7 @@ export default function ({ label, value, icon: Icon }: Props) {
             <div className="flex justify-between">
                 <div className="flex gap-4 items-center">
                     <div className="bg-primary/20 p-2 w-fit rounded-lg">
-                        <Icon color="black" size="16" />
+                        <Icon className="stroke-foreground" size="16" />
                     </div>
                     <span className="text-lg font-medium">{label}</span>
                 </div>
