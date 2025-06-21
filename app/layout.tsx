@@ -9,9 +9,6 @@ export const metadata: Metadata = {
     description: "This application features up to date on police stop and search policies",
 };
 
-const headerHeight = "80px"
-const insetHeight = `h-[calc(100vh-${headerHeight})]`
-
 export default function RootLayout({
     children,
 }: Readonly<{
@@ -24,7 +21,10 @@ export default function RootLayout({
                     <AppSidebar />
                     <div className="w-full">
                         <Header />
-                        <main className={insetHeight}>{children}</main>
+                        <div className="h-[calc(100vh-70px)] p-2">
+                            <main className="h-full rounded-xl bg-background border">{children}</main>
+
+                        </div>
                     </div>
                 </SidebarProvider>
             </body>
@@ -35,9 +35,9 @@ export default function RootLayout({
 function Header() {
     return (
         <SidebarInset>
-            <header className={`flex h-[${headerHeight}] shrink-0 items-center gap-2`}>
-                <div className="flex items-center gap-2 px-4">
-                    <SidebarTrigger className="-ml-1" />
+            <header className={`flex h-[70px] shrink-0 items-end gap-2 bg-sidebar`}>
+                <div className="flex items-center gap-2 px-4 pb-0.5">
+                    <SidebarTrigger className="-ml-1 cursor-pointer" />
                     <Separator
                         orientation="vertical"
                         className="mr-2 data-[orientation=vertical]:h-4"

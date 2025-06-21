@@ -58,7 +58,7 @@ const groups: ApplicationSidebar[] = [
 
 export default function () {
     return (
-        <Sidebar variant="sidebar">
+        <Sidebar variant="inset">
             <Header />
             <SidebarContent>
                 {groups.map((group, index) => (
