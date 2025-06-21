@@ -1,17 +1,15 @@
-import { BarChart3, Fingerprint, LayoutDashboard, LucideIcon, Map, Moon, Settings, Table } from "lucide-react"
+import { BarChart3, Fingerprint, LayoutDashboard, LucideIcon, Map, Moon, Table } from "lucide-react"
 
 import {
     Sidebar,
     SidebarContent,
     SidebarGroup,
-    SidebarGroupContent,
     SidebarGroupLabel,
     SidebarHeader,
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem
 } from "@/components/ui/sidebar"
-import { Button } from "./ui/button"
 
 type ApplicationSidebar = {
     label: string
