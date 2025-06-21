@@ -1,10 +1,14 @@
+import Card from "@/components/Card";
+import Panel from "@/components/Panel";
+import { LucideCalendarCheck, LucidePercentCircle, LucideSearch } from "lucide-react";
+
 export default function Home() {
     return (
         <div className="min-h-full flex flex-grow flex-col items-start space-y-4 p-4">
             <section className="w-full flex flex-col sm:flex-row gap-4">
-                <Panel />
-                <Panel />
-                <Panel />
+                <Panel label="Total Searches" value="128,732" icon={LucideSearch} />
+                <Panel label="This Month" value="4,932" icon={LucideCalendarCheck} />
+                <Panel label="Arrest Rate (%)" value="12.4%" icon={LucidePercentCircle} />
             </section>
 
             <section className="w-full flex flex-col xl:flex-row gap-4">
@@ -18,16 +22,4 @@ export default function Home() {
             </section>
         </div>
     );
-}
-
-function Panel() {
-    return (
-        <div className="w-full h-36 bg-primary/50 rounded-lg"></div>
-    )
-}
-
-function Card() {
-    return (
-        <div className="w-full h-96 bg-primary/50 rounded-lg"></div>
-    )
 }
