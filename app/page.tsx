@@ -11,8 +11,8 @@ export default function Home() {
             <section className="w-full grid lg:grid-cols-2 xl:grid-cols-4 gap-4">
                 <Panel label="Total Searches" value="128,732" icon={LucideSearch} />
                 <Panel label="This Month" value="4,932" icon={LucideCalendarCheck} />
-                <Panel label="Arrest Rate (%)" value="12.4%" icon={LucidePercentCircle} />
                 <Panel label="Avg per Day" value="159" icon={LucideActivity} />
+                <Panel label="Arrest Rate (%)" value="12.4%" icon={LucidePercentCircle} />
             </section>
 
             <section className="w-full flex flex-col xl:flex-row gap-4">
