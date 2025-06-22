@@ -2,6 +2,7 @@ import DonutChartWithText from "@/components/DonutChartWithText";
 import HorizontalBarChart from "@/components/HorizontalBarChart";
 import InfoCard from "@/components/InfoCard";
 import Panel from "@/components/Panel";
+import PanelGrid from "@/components/PanelGrid";
 import RadarChart from "@/components/RadarChart";
 import { LucideActivity, LucidePercentCircle, LucideSearch, LucideUsers } from "lucide-react";
 
@@ -9,10 +10,7 @@ export default function Home() {
     return (
         <div className="min-h-full flex flex-grow flex-col items-start space-y-4 p-4">
             <section className="w-full grid lg:grid-cols-2 xl:grid-cols-4 gap-4">
-                <Panel label="Total Searches" value="128,732" icon={LucideSearch} />
-                <Panel label="Avg per Day" value="159" icon={LucideActivity} />
-                <Panel label="Arrest Rate (%)" value="12.4%" icon={LucidePercentCircle} />
-                <Panel label="Most Searched Age Group" value="18-24" icon={LucideUsers} />
+                <PanelGrid />
             </section>
 
             <section className="w-full flex flex-col xl:flex-row gap-4">

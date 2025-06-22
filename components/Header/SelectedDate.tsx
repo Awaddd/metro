@@ -8,11 +8,13 @@ type Props = {
     date?: string
 }
 
+const dateFormat = "MMM yyyy"
+
 export default function ({ date }: Props) {
     const initialDate = useRef<string>(null)
 
     const updateDate = useCtx(state => state.updateDate)
-    const selectedDate = useCtx(state => format(state.date, 'MMM yyyy'))
+    const selectedDate = useCtx(state => format(state.date, dateFormat))
 
     useEffect(() => {
         if (!date) {
@@ -26,7 +28,7 @@ export default function ({ date }: Props) {
         updateDate(parsed)
 
         // format the date to use for comparing later
-        initialDate.current = format(parsed, 'MMM yyyy')
+        initialDate.current = format(parsed, dateFormat)
     }, [])
 
     return (
