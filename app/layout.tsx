@@ -34,8 +34,8 @@ export default function RootLayout({
 function Header() {
     return (
         <SidebarInset>
-            <header className="flex h-[70px] shrink-0 items-end justify-between gap-2 pb-0.5 bg-sidebar">
-                <div className="flex items-center gap-2 px-4">
+            <header className="flex flex-col md:flex-row md:h-[70px] shrink-0 md:items-end md:justify-between gap-2 pb-0.5 bg-sidebar">
+                <div className="flex flex-col w-full md:flex-row p-4 md:py-0 items-center md:justify-start text-center gap-2">
                     <SidebarTrigger className="-ml-1 cursor-pointer" />
                     <Separator
                         orientation="vertical"
@@ -51,7 +51,7 @@ function Header() {
                         <span className="py-1 px-2.5 ml-3 bg-primary/20 text-primary rounded-lg text-sm font-black">Latest</span>
                     </div>
                 </div>
-                <div className="pr-8">
+                <div className="pr-8 p-8 bg-blue-300 md:bg-sidebar">
                     {/* month picker will go here */}
                 </div>
             </header>
