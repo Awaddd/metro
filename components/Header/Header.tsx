@@ -21,10 +21,7 @@ export default async function () {
                         orientation="vertical"
                         className="data-[orientation=vertical]:h-4 bg-gray-900/50"
                     />
-                    <div className="px-2">
-                        <SelectedDate date={date} />
-                        <span className="py-1 px-2.5 ml-3 bg-primary/20 text-primary rounded-lg text-sm font-black">Latest</span>
-                    </div>
+                    <SelectedDate date={date} />
                 </div>
                 <div className="lg:pr-2 xl:pr-8 flex justify-center">
                     <DatePicker />
