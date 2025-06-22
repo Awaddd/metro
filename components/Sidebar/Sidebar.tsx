@@ -1,4 +1,3 @@
-import { BarChart3, LayoutDashboard, LucideIcon, Map, Moon, Table } from "lucide-react"
 
 import {
     Sidebar,
@@ -7,7 +6,7 @@ import {
     SidebarGroupLabel,
 } from "@/components/ui/sidebar"
 import Header from "./Header"
-import Menu, { IconName, supportedIcons } from "./Menu"
+import Menu, { IconName } from "./Menu"
 
 export type ApplicationSidebar = {
     label: string
@@ -22,16 +21,16 @@ const groups: ApplicationSidebar[] = [
     {
         label: "Application",
         items: [
-            { title: "Overview", url: "/", icon: supportedIcons.LayoutDashboard.name as IconName },
-            { title: "Trends", url: "#", icon: supportedIcons.BarChart3.name as IconName },
-            { title: "Map", url: "#", icon: supportedIcons.Map.name as IconName },
-            { title: "Table", url: "#", icon: supportedIcons.Table.name as IconName },
+            { title: "Overview", url: "/", icon: "LayoutDashboard" },
+            { title: "Trends", url: "#", icon: "BarChart3" },
+            { title: "Map", url: "#", icon: "Map" },
+            { title: "Table", url: "#", icon: "Table" },
         ]
     },
     {
         label: "Settings",
         items: [
-            { title: "Dark mode", icon: supportedIcons.Moon.name as IconName },
+            { title: "Dark mode", icon: "Moon" },
         ]
     }
 ]

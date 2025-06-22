@@ -9,11 +9,11 @@ import { ApplicationSidebar } from "./Sidebar"
 import { BarChart3, LayoutDashboard, Map, Moon, Table } from "lucide-react"
 
 export const supportedIcons = {
-    LayoutDashboard,
-    BarChart3,
-    Map,
-    Table,
-    Moon
+    "LayoutDashboard": LayoutDashboard,
+    "BarChart3": BarChart3,
+    "Map": Map,
+    "Table": Table,
+    "Moon": Moon
 }
 
 export type IconName = keyof typeof supportedIcons
