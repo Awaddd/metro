@@ -20,7 +20,7 @@ export default function ({ date }: Props) {
         }
 
         // create a date object from our year month string
-        const parsed = parse('2024-08', 'yyyy-MM', new Date())
+        const parsed = parse(date, 'yyyy-MM', new Date())
 
         // update state
         updateDate(parsed)
