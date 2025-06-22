@@ -3,12 +3,9 @@ import HorizontalBarChart from "@/components/HorizontalBarChart";
 import InfoCard from "@/components/InfoCard";
 import Panel from "@/components/Panel";
 import RadarChart from "@/components/RadarChart";
-import { LucideActivity, LucideCalendarCheck, LucidePercentCircle, LucideSearch, LucideUsers } from "lucide-react";
-import getAvailableDates from "./actions/available-dates";
+import { LucideActivity, LucidePercentCircle, LucideSearch, LucideUsers } from "lucide-react";
 
-export default async function Home() {
-    await getAvailableDates()
-
+export default function Home() {
     return (
         <div className="min-h-full flex flex-grow flex-col items-start space-y-4 p-4">
             <section className="w-full grid lg:grid-cols-2 xl:grid-cols-4 gap-4">

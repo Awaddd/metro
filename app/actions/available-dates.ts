@@ -12,5 +12,7 @@ export default async function getAvailableDates() {
       dates.push(object.date);
     }
   });
+
   console.log("getting dates for metro...", dates);
+  return dates;
 }

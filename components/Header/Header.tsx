@@ -1,13 +1,11 @@
-"use client"
-
 import DatePicker from "@/components/DatePicker/DatePicker";
 import { Separator } from "@/components/ui/separator";
 import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
-import { useCtx } from "@/state";
-import { format } from 'date-fns';
+import SelectedDate from "./SelectedDate";
+import getAvailableDates from "@/app/actions/available-dates";
 
-export default function () {
-    const date = useCtx(state => format(state.date, 'MMM yyyy'))
+export default async function () {
+    const date = (await getAvailableDates())[0]
 
     return (
         <SidebarInset>
@@ -24,7 +22,7 @@ export default function () {
                         className="data-[orientation=vertical]:h-4 bg-gray-900/50"
                     />
                     <div className="px-2">
-                        <span>Showing results for <span className="underline">{date}</span></span>
+                        <SelectedDate date={date} />
                         <span className="py-1 px-2.5 ml-3 bg-primary/20 text-primary rounded-lg text-sm font-black">Latest</span>
                     </div>
                 </div>

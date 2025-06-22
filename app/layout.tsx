@@ -1,4 +1,4 @@
-import Header from "@/components/Layout/Header";
+import Header from "@/components/Header/Header";
 import Sidebar from "@/components/Sidebar/Sidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import type { Metadata } from "next";
