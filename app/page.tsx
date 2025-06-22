@@ -13,7 +13,7 @@ export default async function Home() {
         <div className="min-h-full flex flex-grow flex-col items-start space-y-4 p-4">
             <section className="w-full grid lg:grid-cols-2 xl:grid-cols-4 gap-4">
                 <Panel label="Total Searches" value="128,732" icon={LucideSearch} />
-                <Panel label="This Month" value="4,932" icon={LucideCalendarCheck} />
+                <Panel label="Past 12 months" value="4,932" icon={LucideCalendarCheck} />
                 <Panel label="Avg per Day" value="159" icon={LucideActivity} />
                 <Panel label="Arrest Rate (%)" value="12.4%" icon={LucidePercentCircle} />
             </section>
