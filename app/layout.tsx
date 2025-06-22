@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import AppSidebar from "@/components/Sidebar"
 import { Separator } from "@/components/ui/separator";
+import Sidebar from "@/components/Sidebar/Sidebar";
 
 export const metadata: Metadata = {
     title: "Metro | Stop & Search Policy Data",
@@ -18,7 +18,7 @@ export default function RootLayout({
         <html lang="en">
             <body className="antialiased bg-background text-foreground overflow-hidden">
                 <SidebarProvider>
-                    <AppSidebar />
+                    <Sidebar />
                     <div className="w-full">
                         <Header />
                         <div className="h-[calc(100vh-70px)] p-2">
