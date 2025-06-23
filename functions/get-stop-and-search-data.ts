@@ -1,9 +1,21 @@
+import client from "@/utils/mongodb";
 import getAvailableDates from "./available-dates";
 
 export default async function getStopSearchData(date?: string) {
+  // check cached data in mongo
+  // if present, return from cache
+  // else fetch anew
+  // normalise
+  // update cache
+
   //   const availableDates = await getAvailableDates();
   //   batch(availableDates, 10);
-  return await fetchData(date);
+  const data = await fetchData(date);
+
+  normaliseData(data);
+  persist(data);
+
+  return data;
 }
 
 async function fetchData(date?: string) {
@@ -11,6 +23,20 @@ async function fetchData(date?: string) {
   const url = "https://jsonplaceholder.typicode.com/posts";
   const response = await fetch(url);
   const data = await response.json();
+  return data;
+}
+
+function normaliseData(data: any) {
+  return data;
+}
+
+async function persist(data: any) {
+  try {
+    const mongoClient = await client.connect();
+  } catch (e) {
+    console.error(e);
+  }
+
   return data;
 }
 
