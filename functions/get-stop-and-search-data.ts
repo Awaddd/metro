@@ -1,23 +1,23 @@
 import getAvailableDates from "./available-dates";
 
-export default async function getStopSearchData(dateString: string) {
+export default async function getStopSearchData(dateString?: string) {
   let date;
 
   if (dateString) {
     date = new Date(dateString);
   }
 
-  const availableDates = await getAvailableDates();
-  batch(availableDates, 10);
+  //   const availableDates = await getAvailableDates();
+  //   batch(availableDates, 10);
+
+  return await fetchData("");
 }
 
-function fetchData(date: string) {
-  return new Promise<void>((resolve) => {
-    setTimeout(() => {
-      console.log("fetched", date);
-      resolve();
-    }, 1000);
-  });
+async function fetchData(date: string) {
+  const url = "https://jsonplaceholder.typicode.com/posts";
+  const response = await fetch(url);
+  const data = await response.json();
+  return data;
 }
 
 async function batch(dates: string[], size: number) {

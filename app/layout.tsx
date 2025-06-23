@@ -3,6 +3,7 @@ import Sidebar from "@/components/Sidebar/Sidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import type { Metadata } from "next";
 import "./globals.css";
+import Providers from "./providers";
 
 export const metadata: Metadata = {
     title: "Metro | Stop & Search Policy Data",
@@ -17,15 +18,17 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body className="antialiased bg-background text-foreground overflow-hidden">
-                <SidebarProvider>
-                    <Sidebar />
-                    <div className="w-full">
-                        <Header />
-                        <div className="h-[calc(100vh-70px)] p-2">
-                            <main className="h-full rounded-xl bg-background border overflow-auto">{children}</main>
+                <Providers>
+                    <SidebarProvider>
+                        <Sidebar />
+                        <div className="w-full">
+                            <Header />
+                            <div className="h-[calc(100vh-70px)] p-2">
+                                <main className="h-full rounded-xl bg-background border overflow-auto">{children}</main>
+                            </div>
                         </div>
-                    </div>
-                </SidebarProvider>
+                    </SidebarProvider>
+                </Providers>
             </body>
         </html>
     );

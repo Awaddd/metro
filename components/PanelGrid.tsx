@@ -2,23 +2,18 @@
 
 import { LucideActivity, LucidePercentCircle, LucideSearch, LucideUsers } from "lucide-react";
 import Panel from "./Panel";
-import { useEffect } from "react";
 import { useCtx } from "@/state";
 import { format } from "date-fns";
+import { useQuery } from "@tanstack/react-query";
+import getStopSearchData from "@/functions/get-stop-and-search-data";
 
 export default function () {
-    const date = useCtx(state => state.date)
+    const date = useCtx(state => format(state.date, 'yyyy-MM'))
 
-    // avoid calling when this is changed initially to the last date with data
-    useEffect(() => {
-        console.log("date has changed...")
-        getData(date)
-    }, [date])
-
-    // placeholder
-    function getData(date: Date) {
-        console.log("fetching data for date", format(date, "MMM yyyy"))
-    }
+    const { data } = useQuery({
+        queryKey: ["stop-search-data", date],
+        queryFn: () => getStopSearchData(date)
+    })
 
     return (
         <>

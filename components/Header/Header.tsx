@@ -2,7 +2,7 @@ import DatePicker from "@/components/DatePicker/DatePicker";
 import { Separator } from "@/components/ui/separator";
 import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import SelectedDate from "./SelectedDate";
-import getAvailableDates from "@/app/actions/available-dates";
+import getAvailableDates from "@/functions/available-dates";
 
 export default async function () {
     const date = (await getAvailableDates())[0]
