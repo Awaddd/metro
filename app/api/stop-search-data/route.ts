@@ -1,7 +1,18 @@
 import client from "@/utils/mongodb";
-import getAvailableDates from "./available-dates";
+import { NextResponse } from "next/server";
 
-export default async function getStopSearchData(date?: string) {
+type Params = {};
+
+export async function GET(request: Request, params: Params) {
+  const url = new URL(request.url);
+
+  // get date filter if present
+  const date = url.searchParams.get("date");
+
+  return NextResponse.json({ message: "connected!" });
+}
+
+async function getStopSearchData(date?: string) {
   // check cached data in mongo
   // if present, return from cache
   // else fetch anew
@@ -19,7 +30,6 @@ export default async function getStopSearchData(date?: string) {
 }
 
 async function fetchData(date?: string) {
-  console.log(`getting data for date (${date ? date : "ALL"})`);
   const url = "https://jsonplaceholder.typicode.com/posts";
   const response = await fetch(url);
   const data = await response.json();

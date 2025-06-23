@@ -1,5 +1,6 @@
 import availableDates from "@/testData/dates.json";
 
+// move to queries
 export default async function getAvailableDates() {
   const dates: string[] = [];
 

@@ -5,8 +5,8 @@ import Panel from "./Panel";
 import { useCtx } from "@/state";
 import { format } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
-import getStopSearchData from "@/functions/get-stop-and-search-data";
 import { getQueryKey } from "@/utils/get-query-key";
+import getStopSearchData from "@/queries/get-stop-search-data";
 
 export default function () {
     const date = useCtx(state => state.date ? format(state.date, 'yyyy-MM') : state.date)

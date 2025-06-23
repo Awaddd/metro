@@ -4,9 +4,9 @@ import InfoCard from "@/components/InfoCard";
 import PanelGrid from "@/components/PanelGrid";
 import RadarChart from "@/components/RadarChart";
 import { getQueryClient } from "./get-query-client";
-import getStopSearchData from "@/functions/get-stop-and-search-data";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { getQueryKey } from "@/utils/get-query-key";
+import getStopSearchData from "@/queries/get-stop-search-data";
 
 export default async function Home() {
     const queryClient = getQueryClient()
