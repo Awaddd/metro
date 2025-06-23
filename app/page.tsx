@@ -6,12 +6,13 @@ import RadarChart from "@/components/RadarChart";
 import { getQueryClient } from "./get-query-client";
 import getStopSearchData from "@/functions/get-stop-and-search-data";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { getQueryKey } from "@/utils/get-query-key";
 
 export default async function Home() {
     const queryClient = getQueryClient()
 
     await queryClient.prefetchQuery({
-        queryKey: ["stop-search-data"],
+        queryKey: getQueryKey(),
         queryFn: () => getStopSearchData()
     })
 

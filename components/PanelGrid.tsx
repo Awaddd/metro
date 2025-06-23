@@ -6,12 +6,13 @@ import { useCtx } from "@/state";
 import { format } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
 import getStopSearchData from "@/functions/get-stop-and-search-data";
+import { getQueryKey } from "@/utils/get-query-key";
 
 export default function () {
-    const date = useCtx(state => format(state.date, 'yyyy-MM'))
+    const date = useCtx(state => state.date ? format(state.date, 'yyyy-MM') : state.date)
 
     const { data } = useQuery({
-        queryKey: ["stop-search-data", date],
+        queryKey: getQueryKey(date),
         queryFn: () => getStopSearchData(date)
     })
 

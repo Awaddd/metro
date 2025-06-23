@@ -5,7 +5,7 @@ import SelectedDate from "./SelectedDate";
 import getAvailableDates from "@/functions/available-dates";
 
 export default async function () {
-    const date = (await getAvailableDates())[0]
+    const mostRecentDateWithData = (await getAvailableDates())[0]
 
     return (
         <SidebarInset>
@@ -17,11 +17,7 @@ export default async function () {
                         className="data-[orientation=vertical]:h-4 bg-gray-900/50"
                     />
                     <h2 className="px-2">Overview</h2>
-                    <Separator
-                        orientation="vertical"
-                        className="data-[orientation=vertical]:h-4 bg-gray-900/50"
-                    />
-                    <SelectedDate date={date} />
+                    <SelectedDate date={mostRecentDateWithData} />
                 </div>
                 <div className="lg:pr-2 xl:pr-8 flex justify-center">
                     <DatePicker />
