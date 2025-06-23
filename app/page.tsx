@@ -7,8 +7,10 @@ import { getQueryClient } from "./get-query-client";
 import getStopSearchData from "@/functions/get-stop-and-search-data";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { getQueryKey } from "@/utils/get-query-key";
+import { testDatabaseConnection } from "./actions";
 
 export default async function Home() {
+    const isConnected = await testDatabaseConnection();
     const queryClient = getQueryClient()
 
     await queryClient.prefetchQuery({
