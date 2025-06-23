@@ -2,35 +2,28 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-First, run the development server:
+Install dependencies
+
+```bash
+npm install
+```
+
+Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Tool choice
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- MongoDB - persist aggregated data from all queries, revalidating this data on a daily basis to keep up to date with the police stop and search api. Considered storing the data in a json file or a json blob in an SQL database, and also storing in normalised columns in an SQL database. Each approach had issues, i.e. the simple deployment solutions I'd like to use such as vercel don't allow write access or only allow access to writing to a temp file with limited size. Hence the move to databases; NoSQL is faster and I'm dealing with many records which is the primary reason for using MongoDB over solutions such as PostgreSQL. Also, it's quicker to get started and deploy because it's schemaless and has a dedicated cloud environment (atlas).
 
-## Learn More
+- React Query - client side query state shared across multiple components. The first component to make a request i.e. get stop search data with a date filter will propogate the changes to all the other components. The filtered data for that data will persist even if we query another date
 
-To learn more about Next.js, take a look at the following resources:
+- Zustand - simple state management solution that works out of the box. Useful for tracking things like filters across the application
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Why didn't I use Docker?
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+In most cases I’d self-host and use Docker, writing the aggregated data to a json file. However, this assignment required a quick, reliable deployment path, and platforms like Vercel don’t support persistent local writes. To work around this, I used MongoDB Atlas as an external data store, which also simplified deployment and fit well with a serverless architecture.

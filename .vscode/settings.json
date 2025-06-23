@@ -9,7 +9,7 @@
     "next-env.d.ts": true,
     "components.json": true,
     "postcss.config.mjs": true,
-    "README.md": true,
+    "README.md": false,
     "app/favicon.ico": true,
     "lib": true
   }
