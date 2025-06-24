@@ -1,32 +1,30 @@
 "use client"
 
+import getAvailableDates from "@/queries/get-available-dates"
 import { useCtx } from "@/state"
+import { useQuery } from "@tanstack/react-query"
 import { format, parse } from "date-fns"
-import { useEffect, useRef } from "react"
 import { Separator } from "../ui/separator"
-
-type Props = {
-    date?: string
-}
 
 const dateFormat = "MMM yyyy"
 
-export default function ({ date }: Props) {
-    const initialDate = useRef<string>(null)
+export default function () {
+    const { data } = useQuery({
+        queryKey: ["available-dates"],
+        queryFn: getAvailableDates
+    })
 
-    const selectedDate = useCtx(state => state.date ? format(state.date, dateFormat) : state.date)
-
-    useEffect(() => {
+    const date = (data ?? [])[0]
+    const lastDateWithData = (() => {
         if (!date) {
             return
         }
 
-        // create a date object from our year month string
         const parsed = parse(date, 'yyyy-MM', new Date())
+        return format(parsed, dateFormat)
+    })()
 
-        // format the date to use for comparing later
-        initialDate.current = format(parsed, dateFormat)
-    }, [])
+    const selectedDate = useCtx(state => state.date ? format(state.date, dateFormat) : state.date)
 
     if (!selectedDate) {
         return null
@@ -41,7 +39,7 @@ export default function ({ date }: Props) {
             <div className="px-2">
                 <span>Showing results for <span className="underline">{selectedDate}</span></span>
 
-                {initialDate.current === selectedDate && (
+                {lastDateWithData === selectedDate && (
                     <span className="py-1 px-2.5 ml-3 bg-primary/20 text-primary rounded-lg text-sm font-black">Latest</span>
                 )}
             </div>

@@ -2,10 +2,15 @@ import DatePicker from "@/components/DatePicker/DatePicker";
 import { Separator } from "@/components/ui/separator";
 import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import SelectedDate from "./SelectedDate";
-import getAvailableDates from "@/functions/available-dates";
+import getAvailableDates from "@/queries/get-available-dates";
+import { getQueryClient } from "@/app/get-query-client";
 
 export default async function () {
-    const mostRecentDateWithData = (await getAvailableDates())[0]
+    const queryClient = getQueryClient()
+    await queryClient.prefetchQuery({
+        queryKey: ["available-dates"],
+        queryFn: getAvailableDates
+    })
 
     return (
         <SidebarInset>
@@ -17,7 +22,7 @@ export default async function () {
                         className="data-[orientation=vertical]:h-4 bg-gray-900/50"
                     />
                     <h2 className="px-2">Overview</h2>
-                    <SelectedDate date={mostRecentDateWithData} />
+                    <SelectedDate />
                 </div>
                 <div className="lg:pr-2 xl:pr-8 flex justify-center">
                     <DatePicker />
