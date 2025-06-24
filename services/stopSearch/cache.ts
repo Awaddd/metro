@@ -45,8 +45,8 @@ export async function validateCache(db: Db): Promise<CacheStatus> {
 
     return {
       stale: true,
-      hasData: !!record2?.hasData,
-      lastUpdated: record2?.lastUpdated ?? null,
+      hasData: !!record2.hasData,
+      lastUpdated: record2.lastUpdated ?? null,
     };
   } catch (e) {
     console.error("Error checking last updated, original error: ", e);
@@ -79,7 +79,8 @@ export async function persist(db: Db, docs: any[]) {
   let updated = false;
 
   try {
-    await dataCollection.deleteMany({});
+    const result = await dataCollection.deleteMany({});
+    console.log(`Deleted ${result.deletedCount} record(s)`);
   } catch (e) {
     console.error("Failed to delete expired cache data, original error:", e);
     return updated;
@@ -87,7 +88,8 @@ export async function persist(db: Db, docs: any[]) {
 
   try {
     const result = await dataCollection.insertMany(docs);
-    console.log("updated stop search collection with", result.insertedCount);
+    console.log(`Inserted ${result.insertedCount} record(s)`);
+
     updated = result.insertedCount === docs.length;
   } catch (e) {
     console.error(
