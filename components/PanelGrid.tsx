@@ -5,7 +5,7 @@ import Panel from "./Panel";
 import { useCtx } from "@/state";
 import { format } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
-import { getQueryKey } from "@/utils/get-query-key";
+import { getQueryKey } from "@/lib/get-query-key";
 import getStopSearchData from "@/queries/get-stop-search-data";
 
 export default function () {

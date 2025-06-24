@@ -11,6 +11,6 @@
     "postcss.config.mjs": true,
     "README.md": false,
     "app/favicon.ico": true,
-    "lib": true
+    "lib": false
   }
 }

@@ -1,6 +1,6 @@
 import { StopSearchData, StopSearchResponse } from "@/types/stop-search";
-import { DATA_COLLECTION, META_COLLECTION } from "@/utils/constants";
-import client from "@/utils/mongodb";
+import { DATA_COLLECTION, META_COLLECTION } from "@/lib/constants";
+import client from "@/lib/mongodb";
 import { Db } from "mongodb";
 import { NextResponse } from "next/server";
 import metroData from "@/testData/metro-aug-24.json";

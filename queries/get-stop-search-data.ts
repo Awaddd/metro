@@ -1,4 +1,4 @@
-import { baseUrl } from "@/utils/constants";
+import { baseUrl } from "@/lib/constants";
 
 export default async function (date?: string) {
   console.log(`getting data for date (${date ? date : "ALL"})`);
