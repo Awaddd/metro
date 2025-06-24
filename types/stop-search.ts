@@ -17,6 +17,25 @@ export type StopSearchResponse = {
   removal_of_more_than_outer_clothing: boolean | null;
 };
 
+export type StopSearchData = {
+  ageRange: "under 10" | "10-17" | "18-24" | "25-34" | "over 34" | null;
+  officerDefinedEthnicity: string | null;
+  involvedPerson: boolean;
+  selfDefinedEthnicity: string | null;
+  gender: string | null;
+  legislation: string | null;
+  outcomeLinkedToObjectOfSearch: boolean | null;
+  datetime: string;
+  outcome: string | null;
+  outcomeObject: Outcome | null;
+  location: Location | null;
+  objectOfSearch: string | null;
+  operation: boolean | null;
+  operationName: string | null;
+  type: "Person search" | "Vehicle search" | "Person and Vehicle search";
+  removalOfMoreThanOuterClothing: boolean | null;
+};
+
 export type Outcome = {
   id: string;
   name: string;

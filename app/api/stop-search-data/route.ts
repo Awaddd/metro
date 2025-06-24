@@ -1,17 +1,26 @@
+import { StopSearchData, StopSearchResponse } from "@/types/stop-search";
 import { DATA_COLLECTION, META_COLLECTION } from "@/utils/constants";
 import client from "@/utils/mongodb";
-import { Collection, Db } from "mongodb";
+import { Db } from "mongodb";
 import { NextResponse } from "next/server";
+import metroData from "@/testData/metro-aug-24.json";
 
 type Params = {};
 
-export async function GET(request: Request, params: Params) {
+export async function GET(request: Request) {
   const url = new URL(request.url);
 
   // get date filter if present
   const date = url.searchParams.get("date");
 
   try {
+    // const uniqueAgeRanges = [
+    //   ...new Set(
+    //     ((metroData as { type: string }[]) ?? []).map((obj) => obj.type)
+    //   ),
+    // ];
+    // console.log("type", uniqueAgeRanges);
+
     return NextResponse.json({ message: "connected!" });
   } catch (error) {
     return NextResponse.json(
@@ -22,41 +31,95 @@ export async function GET(request: Request, params: Params) {
 }
 
 async function getStopSearchData(date?: string) {
-  // check cached data in mongo
   await client.connect();
   const db = client.db("metro");
 
-  // if present, return from cache
+  let cachedData: any[] = [];
+
+  const isValid = await isCacheValid(db);
+
+  if (isValid) {
+    cachedData = await loadFromCache(db);
+  }
+
+  if (cachedData.length > 0) {
+    return cachedData;
+  }
+
   // else fetch anew
 
   //   const availableDates = await getAvailableDates();
   //   batch(availableDates, 10);
-  const data = await fetchData(date);
-
-  // normalise
-
-  normaliseData(data);
-
-  // update cache
-  const docs = [
+  //   const data = await fetchData(date);
+  const data: StopSearchResponse[] = [
     {
       age_range: "over 34",
+      outcome: "A no further action disposal",
+      involved_person: true,
+      self_defined_ethnicity: "Other ethnic group - Not stated",
+      gender: "Male",
+      legislation: "Misuse of Drugs Act 1971 (section 23)",
+      outcome_linked_to_object_of_search: false,
       datetime: "2024-08-22T16:15:00+00:00",
+      removal_of_more_than_outer_clothing: false,
+      outcome_object: {
+        id: "bu-no-further-action",
+        name: "A no further action disposal",
+      },
+      location: {
+        latitude: "51.486807",
+        street: {
+          id: 1677490,
+          name: "On or near St George'S Square Mews",
+        },
+        longitude: "-0.133480",
+      },
+      operation: false,
+      officer_defined_ethnicity: "White",
       type: "Person search",
+      operation_name: null,
       object_of_search: "Controlled drugs",
     },
     {
       age_range: "18-24",
+      outcome: "A no further action disposal",
+      involved_person: true,
+      self_defined_ethnicity:
+        "Black/African/Caribbean/Black British - Caribbean",
+      gender: "Male",
+      legislation: "Criminal Justice and Public Order Act 1994 (section 60)",
+      outcome_linked_to_object_of_search: false,
       datetime: "2024-08-26T13:50:00+00:00",
+      removal_of_more_than_outer_clothing: false,
+      outcome_object: {
+        id: "bu-no-further-action",
+        name: "A no further action disposal",
+      },
+      location: {
+        latitude: "51.526292",
+        street: {
+          id: 1666210,
+          name: "On or near Park/Open Space",
+        },
+        longitude: "-0.216618",
+      },
+      operation: false,
+      officer_defined_ethnicity: "Black",
       type: "Person search",
+      operation_name: null,
       object_of_search: "Anything to threaten or harm anyone",
     },
   ];
 
+  const docs = data.map((item) => transformData(item));
+
+  // placeholder fetch response transformed
+
+  // update cache
   persist(db, docs);
 
   await client.close();
-  return data;
+  return docs;
 }
 
 async function fetchData(date?: string) {
@@ -66,11 +129,28 @@ async function fetchData(date?: string) {
   return data;
 }
 
-function normaliseData(data: any) {
-  return data;
+function transformData(data: StopSearchResponse): StopSearchData {
+  return {
+    ageRange: data.age_range as StopSearchData["ageRange"],
+    officerDefinedEthnicity: data.officer_defined_ethnicity,
+    involvedPerson: data.involved_person,
+    selfDefinedEthnicity: data.self_defined_ethnicity,
+    gender: data.gender,
+    legislation: data.legislation,
+    outcomeLinkedToObjectOfSearch: data.outcome_linked_to_object_of_search,
+    datetime: data.datetime,
+    outcome: data.outcome,
+    outcomeObject: data.outcome_object,
+    location: data.location,
+    objectOfSearch: data.object_of_search,
+    operation: data.operation,
+    operationName: data.operation_name,
+    type: data.type as StopSearchData["type"],
+    removalOfMoreThanOuterClothing: data.removal_of_more_than_outer_clothing,
+  };
 }
 
-async function validateCache(db: Db) {
+async function isCacheValid(db: Db) {
   const meta = db.collection(META_COLLECTION);
 
   const startOfDay = new Date();
@@ -94,9 +174,23 @@ async function validateCache(db: Db) {
   }
 }
 
+async function loadFromCache(db: Db) {
+  const dataCollection = db.collection(DATA_COLLECTION);
+
+  try {
+    return await dataCollection.find().toArray();
+  } catch (e) {
+    console.error(
+      "Failed to load stop and search data from cache, original error:",
+      e
+    );
+    return [];
+  }
+}
+
 async function persist(db: Db, docs: any[]) {
   const dataCollection = db.collection(DATA_COLLECTION);
-  const metaCollection = db.collection(META_COLLECTION);
+  const meta = db.collection(META_COLLECTION);
 
   let updated = false;
 
@@ -121,11 +215,7 @@ async function persist(db: Db, docs: any[]) {
       lastUpdated: new Date(),
     };
 
-    const result = await metaCollection.updateOne(
-      {},
-      { $set: doc },
-      { upsert: true }
-    );
+    const result = await meta.updateOne({}, { $set: doc }, { upsert: true });
 
     console.log("updated meta with", result.upsertedId);
     return true;
