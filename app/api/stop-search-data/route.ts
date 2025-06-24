@@ -39,6 +39,5 @@ async function getData(filters: StopSearchFilters) {
 
   const data = await loadFromCache(db, filters);
 
-  await client.close();
   return data;
 }

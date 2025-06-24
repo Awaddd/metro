@@ -47,6 +47,12 @@ export async function persist(db: Db, docs: any[]) {
   let updated = false;
 
   try {
+    await dataCollection.deleteMany({});
+  } catch (e) {
+    console.error("Failed to delete expired cache data, original error:", e);
+  }
+
+  try {
     const result = await dataCollection.insertMany(docs);
     console.log("updated stop search collection with", result.insertedCount);
     updated = result.insertedCount === docs.length;
@@ -61,7 +67,7 @@ export async function persist(db: Db, docs: any[]) {
     return false;
   }
 
-  // update meta if successfully updated data
+  // update last updated if successfully stored fresh data
   try {
     const doc = {
       lastUpdated: new Date(),
