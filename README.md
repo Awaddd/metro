@@ -27,3 +27,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 ## Why didn't I use Docker?
 
 In most cases I’d self-host and use Docker, writing the aggregated data to a json file. However, this assignment required a quick, reliable deployment path, and platforms like Vercel don’t support persistent local writes. To work around this, I used MongoDB Atlas as an external data store, which also simplified deployment and fit well with a serverless architecture.
+
+## What would I have done differently if I had time
+
+I would have wrapped some of my mongo calls in transactions to ensure data is added or removed together in unison if all operations succeed.

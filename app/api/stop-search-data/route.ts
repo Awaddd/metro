@@ -29,9 +29,20 @@ async function getData(filters: StopSearchFilters) {
   await client.connect();
   const db = client.db("metro");
 
-  const valid = await validateCache(db);
+  const { stale, hasData, lastUpdated } = await validateCache(db);
 
-  if (!valid) {
+  if (stale && hasData) {
+    // return stale data in the mean time, trigger a fetch to happen in the background
+    fetchStopSearchData()
+      .then((data) => data.map(transformData))
+      .then((transformed) => persist(db, transformed))
+      .catch((e) => console.log("Failed to update data, original error: ", e));
+
+    return await loadFromCache(db, filters);
+  }
+
+  if (stale && !hasData) {
+    // fetch new data and force user to wait (rare edgecase, we most probably always will have stale data)
     const freshData = await fetchStopSearchData();
     const transformed = freshData.map(transformData);
     await persist(db, transformed);
@@ -39,5 +50,9 @@ async function getData(filters: StopSearchFilters) {
 
   const data = await loadFromCache(db, filters);
 
-  return data;
+  return {
+    data,
+    stale,
+    lastUpdated,
+  };
 }
