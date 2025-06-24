@@ -1,7 +1,8 @@
 import { DATA_COLLECTION, META_COLLECTION } from "@/lib/constants";
+import { StopSearchFilters } from "@/types/stop-search";
 import { Db } from "mongodb";
 
-export async function isCacheValid(db: Db) {
+export async function validateCache(db: Db) {
   const meta = db.collection(META_COLLECTION);
 
   const startOfDay = new Date();
@@ -25,7 +26,7 @@ export async function isCacheValid(db: Db) {
   }
 }
 
-export async function loadFromCache(db: Db) {
+export async function loadFromCache(db: Db, filters: StopSearchFilters) {
   const dataCollection = db.collection(DATA_COLLECTION);
 
   try {

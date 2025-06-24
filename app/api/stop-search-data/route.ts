@@ -1,11 +1,12 @@
 import client from "@/lib/mongodb";
 import {
-  isCacheValid,
+  validateCache,
   loadFromCache,
   persist,
 } from "@/services/stopSearch/cache";
 import { fetchStopSearchData } from "@/services/stopSearch/fetch";
 import { transformData } from "@/services/stopSearch/transform";
+import { StopSearchFilters } from "@/types/stop-search";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
@@ -24,32 +25,20 @@ export async function GET(request: Request) {
   }
 }
 
-async function getStopSearchData(date?: string) {
+async function getData(filters: StopSearchFilters) {
   await client.connect();
   const db = client.db("metro");
 
-  let cachedData: any[] = [];
+  const valid = await validateCache(db);
 
-  const isValid = await isCacheValid(db);
-
-  if (isValid) {
-    cachedData = await loadFromCache(db);
+  if (!valid) {
+    const freshData = await fetchStopSearchData();
+    const transformed = freshData.map(transformData);
+    await persist(db, transformed);
   }
 
-  if (cachedData.length > 0) {
-    return cachedData;
-  }
-
-  // else fetch anew
-
-  const data = await fetchStopSearchData();
-  const docs = data.map((item) => transformData(item));
-
-  // placeholder fetch response transformed
-
-  // update cache
-  persist(db, docs);
+  const data = await loadFromCache(db, filters);
 
   await client.close();
-  return docs;
+  return data;
 }

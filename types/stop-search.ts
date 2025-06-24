@@ -36,18 +36,22 @@ export type StopSearchData = {
   removalOfMoreThanOuterClothing: boolean | null;
 };
 
-export type Outcome = {
+type Outcome = {
   id: string;
   name: string;
 };
 
-export type Street = {
+type Street = {
   id: number;
   name: string;
 };
 
-export type Location = {
+type Location = {
   latitude: string;
   longitude: string;
   street: Street;
+};
+
+export type StopSearchFilters = {
+  date?: string | null;
 };

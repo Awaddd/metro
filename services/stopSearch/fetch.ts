@@ -4,13 +4,8 @@ import { StopSearchResponse } from "@/types/stop-search";
 export async function fetchStopSearchData(
   date?: string
 ): Promise<StopSearchResponse[]> {
-  if (date) {
-    const data = await fetchData(date);
-    return data;
-  }
-
-  const availableDates = await getAvailableDates();
-  batchFetchData(availableDates, 10);
+  // const availableDates = await getAvailableDates();
+  // batchFetchData(availableDates, 10);
   return tempData;
 }
 
