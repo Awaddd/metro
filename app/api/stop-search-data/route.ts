@@ -37,8 +37,6 @@ async function getData(filters: StopSearchFilters) {
       .then((data) => data.map(transformData))
       .then((transformed) => persist(db, transformed))
       .catch((e) => console.log("Failed to update data, original error: ", e));
-
-    return await loadFromCache(db, filters);
   }
 
   if (stale && !hasData) {
