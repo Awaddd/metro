@@ -1,3 +1,4 @@
+import { runInBackground } from "@/lib/helpers";
 import client from "@/lib/mongodb";
 import {
   validateCache,
@@ -33,7 +34,7 @@ async function getData(filters: StopSearchFilters) {
 
   if (stale && hasData) {
     // return stale data in the mean time, trigger a fetch to happen in the background
-    fetchAndPersist(db);
+    runInBackground(() => fetchAndPersist(db));
   } else if (stale && !hasData) {
     // fetch new data and force user to wait (rare edgecase, we most probably always will have stale data)
     await fetchAndPersist(db);
