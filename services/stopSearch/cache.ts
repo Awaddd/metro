@@ -18,7 +18,7 @@ export async function validateCache(db: Db): Promise<CacheStatus> {
 
   const lastWeek = new Date();
 
-  lastWeek.setDate(lastWeek.getDate() - 7);
+  lastWeek.setDate(new Date().getDate() - 7);
   lastWeek.setHours(0, 0, 0, 0);
 
   try {
@@ -28,15 +28,12 @@ export async function validateCache(db: Db): Promise<CacheStatus> {
       },
     });
 
+    // if we failed to find a record in the last week, check if we have any data at all even if stale
     if (!record) {
       const record2 = await meta.findOne<MetaDocument>({});
 
       if (!record2) {
-        return {
-          stale: true,
-          hasData: false,
-          lastUpdated: null,
-        };
+        throw new Error("Meta document does not exist");
       }
 
       return {
@@ -48,7 +45,7 @@ export async function validateCache(db: Db): Promise<CacheStatus> {
 
     return {
       stale: false,
-      hasData: true,
+      hasData: record.hasData,
       lastUpdated: record.lastUpdated,
     };
   } catch (e) {
