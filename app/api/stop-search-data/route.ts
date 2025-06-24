@@ -1,4 +1,4 @@
-import { CACHE_KEY, DATA_COLLECTION, META_COLLECTION } from "@/utils/constants";
+import { DATA_COLLECTION, META_COLLECTION } from "@/utils/constants";
 import client from "@/utils/mongodb";
 import { Collection, Db } from "mongodb";
 import { NextResponse } from "next/server";
@@ -71,13 +71,27 @@ function normaliseData(data: any) {
 }
 
 async function validateCache(db: Db) {
-  const metaCollection = db.collection(META_COLLECTION);
+  const meta = db.collection(META_COLLECTION);
 
-  const today = new Date();
+  const startOfDay = new Date();
+  const endOfDay = new Date();
+
+  startOfDay.setHours(0, 0, 0, 0);
+  endOfDay.setHours(23, 59, 59, 999);
 
   try {
-    metaCollection.findOne({ [CACHE_KEY]: today });
-  } catch (error) {}
+    const record = await meta.findOne({
+      lastUpdated: {
+        $gte: startOfDay,
+        $lte: endOfDay,
+      },
+    });
+
+    return !!record;
+  } catch (e) {
+    console.error("Error checking last updated, original error: ", e);
+    return false;
+  }
 }
 
 async function persist(db: Db, docs: any[]) {
