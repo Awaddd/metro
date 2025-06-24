@@ -18,7 +18,13 @@ export async function GET(request: Request) {
   const date = url.searchParams.get("date");
 
   try {
-    return NextResponse.json({ message: "connected!" });
+    const { data, stale, lastUpdated } = await getData({});
+
+    return NextResponse.json({
+      data,
+      stale,
+      lastUpdated,
+    });
   } catch (error) {
     return NextResponse.json(
       { error: "Internal server error" },
