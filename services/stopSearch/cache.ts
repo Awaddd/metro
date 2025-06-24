@@ -5,17 +5,15 @@ import { Db } from "mongodb";
 export async function validateCache(db: Db) {
   const meta = db.collection(META_COLLECTION);
 
-  const startOfDay = new Date();
-  const endOfDay = new Date();
+  const lastWeek = new Date();
 
-  startOfDay.setHours(0, 0, 0, 0);
-  endOfDay.setHours(23, 59, 59, 999);
+  lastWeek.setDate(lastWeek.getDate() - 7);
+  lastWeek.setHours(0, 0, 0, 0);
 
   try {
     const record = await meta.findOne({
       lastUpdated: {
-        $gte: startOfDay,
-        $lte: endOfDay,
+        $gte: lastWeek,
       },
     });
 
