@@ -28,25 +28,25 @@ export async function validateCache(db: Db): Promise<CacheStatus> {
       },
     });
 
-    // if we failed to find a record in the last week, check if we have any data at all even if stale
-    if (!record) {
-      const record2 = await meta.findOne<MetaDocument>({});
-
-      if (!record2) {
-        throw new Error("Meta document does not exist");
-      }
-
+    if (record) {
       return {
-        stale: true,
-        hasData: !!record2?.hasData,
-        lastUpdated: record2?.lastUpdated ?? null,
+        stale: false,
+        hasData: record.hasData,
+        lastUpdated: record.lastUpdated,
       };
     }
 
+    // if we failed to find a record in the last week, check if we have any data at all even if stale
+    const record2 = await meta.findOne<MetaDocument>({});
+
+    if (!record2) {
+      throw new Error("Meta document does not exist");
+    }
+
     return {
-      stale: false,
-      hasData: record.hasData,
-      lastUpdated: record.lastUpdated,
+      stale: true,
+      hasData: !!record2?.hasData,
+      lastUpdated: record2?.lastUpdated ?? null,
     };
   } catch (e) {
     console.error("Error checking last updated, original error: ", e);
