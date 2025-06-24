@@ -112,7 +112,7 @@ async function persist(db: Db, docs: any[]) {
   }
 
   if (!updated) {
-    return;
+    return false;
   }
 
   // update meta if successfully updated data
@@ -121,10 +121,17 @@ async function persist(db: Db, docs: any[]) {
       lastUpdated: new Date(),
     };
 
-    const result = await metaCollection.insertOne(doc);
-    console.log("updated meta with", result.insertedId);
+    const result = await metaCollection.updateOne(
+      {},
+      { $set: doc },
+      { upsert: true }
+    );
+
+    console.log("updated meta with", result.upsertedId);
+    return true;
   } catch (e) {
     console.error("Failed to update mongo meta, original error", e);
+    return false;
   }
 }
 
