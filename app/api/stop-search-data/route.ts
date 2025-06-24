@@ -7,6 +7,7 @@ import {
 import { fetchStopSearchData } from "@/services/stopSearch/fetch";
 import { transformData } from "@/services/stopSearch/transform";
 import { StopSearchFilters } from "@/types/stop-search";
+import { Db } from "mongodb";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
@@ -26,24 +27,16 @@ export async function GET(request: Request) {
 }
 
 async function getData(filters: StopSearchFilters) {
-  await client.connect();
   const db = client.db("metro");
 
   const { stale, hasData, lastUpdated } = await validateCache(db);
 
   if (stale && hasData) {
     // return stale data in the mean time, trigger a fetch to happen in the background
-    fetchStopSearchData()
-      .then((data) => data.map(transformData))
-      .then((transformed) => persist(db, transformed))
-      .catch((e) => console.log("Failed to update data, original error: ", e));
-  }
-
-  if (stale && !hasData) {
+    fetchAndPersist(db);
+  } else if (stale && !hasData) {
     // fetch new data and force user to wait (rare edgecase, we most probably always will have stale data)
-    const freshData = await fetchStopSearchData();
-    const transformed = freshData.map(transformData);
-    await persist(db, transformed);
+    await fetchAndPersist(db);
   }
 
   const data = await loadFromCache(db, filters);
@@ -53,4 +46,10 @@ async function getData(filters: StopSearchFilters) {
     stale,
     lastUpdated,
   };
+}
+
+async function fetchAndPersist(db: Db) {
+  const freshData = await fetchStopSearchData();
+  const transformed = freshData.map(transformData);
+  await persist(db, transformed);
 }
