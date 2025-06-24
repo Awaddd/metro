@@ -2,7 +2,18 @@ import { DATA_COLLECTION, META_COLLECTION } from "@/lib/constants";
 import { StopSearchFilters } from "@/types/stop-search";
 import { Db } from "mongodb";
 
-export async function validateCache(db: Db) {
+type MetaDocument = {
+  lastUpdated: Date | null;
+  hasData: boolean;
+};
+
+type CacheStatus = {
+  stale: boolean;
+  hasData: boolean;
+  lastUpdated: Date | null;
+};
+
+export async function validateCache(db: Db): Promise<CacheStatus> {
   const meta = db.collection(META_COLLECTION);
 
   const lastWeek = new Date();
@@ -11,16 +22,42 @@ export async function validateCache(db: Db) {
   lastWeek.setHours(0, 0, 0, 0);
 
   try {
-    const record = await meta.findOne({
+    const record = await meta.findOne<MetaDocument>({
       lastUpdated: {
         $gte: lastWeek,
       },
     });
 
-    return !!record;
+    if (!record) {
+      const record2 = await meta.findOne<MetaDocument>({});
+
+      if (!record2) {
+        return {
+          stale: true,
+          hasData: false,
+          lastUpdated: null,
+        };
+      }
+
+      return {
+        stale: true,
+        hasData: !!record2?.hasData,
+        lastUpdated: record2?.lastUpdated ?? null,
+      };
+    }
+
+    return {
+      stale: false,
+      hasData: true,
+      lastUpdated: record.lastUpdated,
+    };
   } catch (e) {
     console.error("Error checking last updated, original error: ", e);
-    return false;
+    return {
+      stale: true,
+      hasData: false,
+      lastUpdated: null,
+    };
   }
 }
 
@@ -48,6 +85,7 @@ export async function persist(db: Db, docs: any[]) {
     await dataCollection.deleteMany({});
   } catch (e) {
     console.error("Failed to delete expired cache data, original error:", e);
+    return updated;
   }
 
   try {
@@ -69,6 +107,7 @@ export async function persist(db: Db, docs: any[]) {
   try {
     const doc = {
       lastUpdated: new Date(),
+      hasData: true,
     };
 
     const result = await meta.updateOne({}, { $set: doc }, { upsert: true });
