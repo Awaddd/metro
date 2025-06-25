@@ -29,6 +29,7 @@ export async function GET(request: Request) {
     // especially since we are dealing with many records
     const uniqueDays = new Set();
     let arrestCount = 0;
+    const ages = new Map();
 
     // do all calculations in one loop as we are going through a huge number of records
     // so inefficient to calculate separately
@@ -38,6 +39,9 @@ export async function GET(request: Request) {
       if (item.outcome?.toLowerCase() === "arrest") {
         arrestCount += 1;
       }
+
+      const key = item.ageRange == null ? "null" : item.ageRange;
+      ages.set(key, (ages.get(key) ?? 0) + 1);
     }
 
     const averagePerDay = totalSearches / uniqueDays.size;
@@ -48,6 +52,7 @@ export async function GET(request: Request) {
         totalSearches,
         averagePerDay,
         arrestRate: Math.round(arrestRate * 10) / 10,
+        mostSearchedAgeGroup: getMostSearchedAgeGroup(ages),
       },
     };
 
@@ -96,4 +101,22 @@ async function fetchAndPersist(db: Db) {
   const freshData = await fetchStopSearchData();
   const transformed = freshData.map(transformData);
   await persist(db, transformed);
+}
+
+function getMostSearchedAgeGroup(ages: Map<string, number>) {
+  let greatestValue = 0;
+  let mostSearchedAgeGroup = null;
+
+  for (const [key, value] of ages) {
+    if (value > greatestValue) {
+      greatestValue = value;
+      mostSearchedAgeGroup = key;
+    }
+  }
+
+  console.log(
+    `Most searched age group ${mostSearchedAgeGroup} with value ${greatestValue}`
+  );
+
+  return mostSearchedAgeGroup;
 }

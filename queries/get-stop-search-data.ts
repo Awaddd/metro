@@ -11,6 +11,7 @@ type Stats = {
     totalSearches: number;
     averagePerDay: number;
     arrestRate: number;
+    mostSearchedAgeGroup: string | null;
   };
 };
 
