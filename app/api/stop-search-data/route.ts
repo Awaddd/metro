@@ -29,7 +29,8 @@ export async function GET(request: Request) {
     // especially since we are dealing with many records
     const uniqueDays = new Set();
     let arrestCount = 0;
-    const ages = new Map();
+    const ages = new Map<string, number>();
+    const ethnicities = new Map<string, number>();
 
     // do all calculations in one loop as we are going through a huge number of records
     // so inefficient to calculate separately
@@ -42,6 +43,10 @@ export async function GET(request: Request) {
 
       const key = item.ageRange == null ? "null" : item.ageRange;
       ages.set(key, (ages.get(key) ?? 0) + 1);
+
+      const ethnicity =
+        item.selfDefinedEthnicity == null ? "null" : item.selfDefinedEthnicity;
+      ethnicities.set(ethnicity, (ethnicities.get(ethnicity) ?? 0) + 1);
     }
 
     const averagePerDay = totalSearches / uniqueDays.size;
@@ -53,6 +58,7 @@ export async function GET(request: Request) {
         averagePerDay,
         arrestRate: Math.round(arrestRate * 10) / 10,
         mostSearchedAgeGroup: getMostSearchedAgeGroup(ages),
+        ethnicities,
       },
     };
 

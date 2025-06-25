@@ -12,6 +12,7 @@ type Stats = {
     averagePerDay: number;
     arrestRate: number;
     mostSearchedAgeGroup: string | null;
+    ethnicities: Map<string, number>;
   };
 };
 
