@@ -24,16 +24,30 @@ export async function GET(request: Request) {
 
     const totalSearches = data.length;
 
-    // slice date instead of formatting with date-fns for improved performance
+    // when determining uniqye days, slice date instead of formatting with date-fns for improved performance
     // creating a date obj and formatting each would add unnecessary computation
     // especially since we are dealing with many records
-    const uniqueDays = new Set(data.map((item) => item.datetime.slice(0, 10)));
+    const uniqueDays = new Set();
+    let arrestCount = 0;
+
+    // do all calculations in one loop as we are going through a huge number of records
+    // so inefficient to calculate separately
+    for (const item of data) {
+      uniqueDays.add(item.datetime.slice(0, 10));
+
+      if (item.outcome?.toLowerCase() === "arrest") {
+        arrestCount += 1;
+      }
+    }
+
     const averagePerDay = totalSearches / uniqueDays.size;
+    const arrestRate = (arrestCount / totalSearches) * 100;
 
     const stats = {
       overview: {
         totalSearches,
         averagePerDay,
+        arrestRate: Math.round(arrestRate * 10) / 10,
       },
     };
 

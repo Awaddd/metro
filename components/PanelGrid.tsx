@@ -20,7 +20,7 @@ export default function () {
         <>
             <Panel label="Total Searches" value={data?.stats?.overview.totalSearches ?? 0} icon={LucideSearch} />
             <Panel label="Avg per Day" value={data?.stats?.overview.averagePerDay ?? 0} icon={LucideActivity} />
-            <Panel label="Arrest Rate (%)" value="12.4%" icon={LucidePercentCircle} />
+            <Panel label="Arrest Rate (%)" value={`${data?.stats?.overview.arrestRate ?? 0}%`} icon={LucidePercentCircle} />
             <Panel label="Most Searched Age Group" value="18-24" icon={LucideUsers} />
         </>
     )

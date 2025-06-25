@@ -10,6 +10,7 @@ type Stats = {
   overview: {
     totalSearches: number;
     averagePerDay: number;
+    arrestRate: number;
   };
 };
 
