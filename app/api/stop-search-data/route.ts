@@ -20,8 +20,27 @@ export async function GET(request: Request) {
   try {
     const { data, stale, lastUpdated } = await getData({});
 
+    console.log("data", data);
+
+    const totalSearches = data.length;
+
+    // slice date instead of formatting with date-fns for improved performance
+    // creating a date obj and formatting each would add unnecessary computation
+    // especially since we are dealing with many records
+    const uniqueDays = new Set(data.map((item) => item.datetime.slice(0, 10)));
+    const averagePerDay = totalSearches / uniqueDays.size;
+
+    const stats = {
+      overview: {
+        totalSearches,
+        averagePerDay,
+      },
+    };
+
+    console.log("stats", stats);
+
     return NextResponse.json({
-      data,
+      stats,
       stale,
       lastUpdated,
     });
@@ -39,11 +58,15 @@ async function getData(filters: StopSearchFilters) {
   const { stale, hasData, lastUpdated } = await validateCache(db);
 
   if (stale && hasData) {
+    console.log("stale, has data... fetching data in background");
     // return stale data in the mean time, trigger a fetch to happen in the background
     runInBackground(() => fetchAndPersist(db));
   } else if (stale && !hasData) {
     // fetch new data and force user to wait (rare edgecase, we most probably always will have stale data)
+    console.log("stale, no data... fetching data and waiting");
     await fetchAndPersist(db);
+  } else {
+    console.log("fresh cached data is available, loading from cache...");
   }
 
   const data = await loadFromCache(db, filters);

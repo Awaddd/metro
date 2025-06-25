@@ -1,13 +1,19 @@
 import { baseUrl } from "@/lib/constants";
-import { StopSearchData } from "@/types/stop-search";
 
 type ReturnType = {
-  data: StopSearchData[];
+  stats: Stats | null;
   lastUpdated: Date | null;
   stale: boolean;
 };
 
-export default async function (date?: string): Promise<ReturnType> {
+type Stats = {
+  overview: {
+    totalSearches: number;
+    averagePerDay: number;
+  };
+};
+
+export default async function (date?: string): Promise<ReturnType | undefined> {
   console.log(`getting data for date (${date ? date : "ALL"})`);
   const url = `${baseUrl}/api/stop-search-data?date=${date}`;
   try {
@@ -15,10 +21,5 @@ export default async function (date?: string): Promise<ReturnType> {
     return await response.json();
   } catch (error) {
     console.error(error);
-    return {
-      data: [],
-      lastUpdated: null,
-      stale: true,
-    };
   }
 }

@@ -1,5 +1,8 @@
 import { StopSearchData, StopSearchResponse } from "@/types/stop-search";
 
+// when transforming, we will ignore many unnecessary properties, drastically reducing the size of objects
+// we store in mongo, this helps both with performance and keeping costs low
+// TODO: remove unnecessary properties not used in calculations like legislation
 export function transformData(data: StopSearchResponse): StopSearchData {
   return {
     ageRange: data.age_range as StopSearchData["ageRange"],

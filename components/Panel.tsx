@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader } from "./ui/card"
 
 type Props = {
     label: string
-    value: string
+    value: string | number
     icon: LucideIcon
 }
 

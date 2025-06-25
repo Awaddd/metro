@@ -18,8 +18,8 @@ export default function () {
 
     return (
         <>
-            <Panel label="Total Searches" value="128,732" icon={LucideSearch} />
-            <Panel label="Avg per Day" value="159" icon={LucideActivity} />
+            <Panel label="Total Searches" value={data?.stats?.overview.totalSearches ?? 0} icon={LucideSearch} />
+            <Panel label="Avg per Day" value={data?.stats?.overview.averagePerDay ?? 0} icon={LucideActivity} />
             <Panel label="Arrest Rate (%)" value="12.4%" icon={LucidePercentCircle} />
             <Panel label="Most Searched Age Group" value="18-24" icon={LucideUsers} />
         </>
