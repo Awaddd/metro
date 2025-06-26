@@ -3,7 +3,8 @@ import { StopSearchData } from "./stop-search";
 export type StopSearchStatistics = {
   totalSearches: number;
   averagePerDay: number;
-  arrestRate: number;
+  arrests: number;
+  arrestRate?: number;
   mostSearchedAgeGroup: string | null;
   //   ethnicities: Map<string, number>;
   // ... other statistics

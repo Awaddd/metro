@@ -36,13 +36,16 @@ export default function () {
         queryFn: () => getStopSearchData(filters)
     })
 
+    const averagePerDay = Math.round((data?.statistics.averagePerDay ?? 0) * 10) / 10
+    const arrestRate = Math.round((data?.statistics.arrestRate ?? 0) * 10) / 10
+
     console.log("data", data)
 
     return (
         <>
             <Panel label="Total Searches" value={data?.statistics.totalSearches ?? 0} icon={LucideSearch} />
-            <Panel label="Avg per Day" value={data?.statistics.averagePerDay ?? 0} icon={LucideActivity} />
-            <Panel label="Arrest Rate (%)" value={`${data?.statistics.arrestRate ?? 0}%`} icon={LucidePercentCircle} />
+            <Panel label="Avg per Day" value={averagePerDay} icon={LucideActivity} />
+            <Panel label="Arrest Rate (%)" value={`${arrestRate}%`} icon={LucidePercentCircle} />
             <Panel label="Most Searched Age Group" value={data?.statistics.mostSearchedAgeGroup ?? "N/A"} icon={LucideUsers} />
         </>
     )

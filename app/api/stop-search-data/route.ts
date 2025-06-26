@@ -136,15 +136,40 @@ function calculateStatistics(data: StopSearchData[]) {
 
         const matchedItems = [];
 
+        // when determining uniqye days, slice date instead of formatting with date-fns for improved performance
+        // creating a date obj and formatting each would add unnecessary computation
+        // especially since we are dealing with many records
+        const uniqueDays = new Set();
+        let arrestCount = 0;
+        const ages = new Map<string, number>();
+
+        // do all calculations in one loop as we are going through a huge number of records
+        // so inefficient to calculate separately
         for (const item of data) {
           if (
-            item.datetime.includes(month) &&
-            item.ageRange === ageGroup &&
-            item.type === type
+            !(
+              item.datetime.includes(month) &&
+              item.ageRange === ageGroup &&
+              item.type === type
+            )
           ) {
-            matchedItems.push(item);
+            continue;
           }
+
+          matchedItems.push(item);
+
+          uniqueDays.add(item.datetime.slice(0, 10));
+
+          if (item.outcome?.toLowerCase() === "arrest") {
+            arrestCount += 1;
+          }
+
+          const key = item.ageRange == null ? "null" : item.ageRange;
+          ages.set(key, (ages.get(key) ?? 0) + 1);
         }
+
+        const totalSearches = matchedItems.length;
+        const averagePerDay = totalSearches / uniqueDays.size;
 
         if (matchedItems.length === 0) {
           continue;
@@ -154,9 +179,9 @@ function calculateStatistics(data: StopSearchData[]) {
           month: month,
           ageRange: ageGroup,
           type: type,
-          totalSearches: matchedItems.length,
-          arrestRate: 0,
-          averagePerDay: 0,
+          totalSearches,
+          arrests: arrestCount,
+          averagePerDay: averagePerDay,
           mostSearchedAgeGroup: "null",
         };
 
@@ -188,7 +213,7 @@ function getTotals(data: StatisticDocument[]): FilteredStatistic {
     (previous, next) => {
       const n = {
         totalSearches: previous.totalSearches + next.totalSearches,
-        arrestRate: previous.arrestRate + next.arrestRate,
+        arrests: previous.arrests + next.arrests,
         averagePerDay: previous.averagePerDay,
         mostSearchedAgeGroup: previous.mostSearchedAgeGroup,
       };
@@ -196,7 +221,7 @@ function getTotals(data: StatisticDocument[]): FilteredStatistic {
     },
     {
       totalSearches: 0,
-      arrestRate: 0,
+      arrests: 0,
       averagePerDay: 0,
       mostSearchedAgeGroup: null,
     }
@@ -206,6 +231,7 @@ function getTotals(data: StatisticDocument[]): FilteredStatistic {
     month: null,
     ageRange: null,
     type: null,
+    arrestRate: (totals.arrests / totals.totalSearches) * 100,
     ...totals,
   };
 }
