@@ -24,7 +24,7 @@ export async function GET(request: Request) {
   const url = new URL(request.url);
 
   // get filters if present
-  const month = url.searchParams.get("date");
+  const month = url.searchParams.get("month");
   const ageParam = url.searchParams.get("age");
   const typeParam = url.searchParams.get("type");
 
@@ -92,7 +92,6 @@ async function getData(filters: FilterParams) {
     filters?.type
   );
 
-  console.log("are filters applied", filtersAreApplied);
   console.timeEnd("totalGetData");
 
   // must always return one document, either the unfiltered one with all of the records showing

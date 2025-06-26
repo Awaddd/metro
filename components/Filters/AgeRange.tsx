@@ -16,6 +16,7 @@ export default function () {
     const { ageRange, updateAgeRange } = useCtx()
 
     return (
+        // if time allows fix controlled uncontrolled complaint
         <Select value={ageRange ?? undefined} onValueChange={(value) => updateAgeRange(value as StopSearchData["ageRange"])}>
             <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Select an age range" />
@@ -27,7 +28,7 @@ export default function () {
                         if (!range) return null
 
                         return (
-                            <SelectItem value={range}>{range}</SelectItem>
+                            <SelectItem key={range} value={range}>{range}</SelectItem>
                         )
                     })}
                 </SelectGroup>

@@ -7,14 +7,33 @@ import { format } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
 import { getQueryKey } from "@/lib/get-query-key";
 import getStopSearchData from "@/queries/get-stop-search-data";
+import { FilterParams } from "@/types/stats";
+import { useMemo } from "react";
 
 export default function () {
-    const date = useCtx(state => state.date ? format(state.date, 'yyyy-MM') : state.date)
+    const { date, type, ageRange } = useCtx()
 
-    // todo: pass in other filters
+    const filters = useMemo(() => {
+        const result: FilterParams = {}
+
+        if (date) {
+            result.month = date ? format(date, 'yyyy-MM') : date
+        }
+
+        if (ageRange) {
+            result.ageRange = ageRange
+        }
+
+        if (type) {
+            result.type = type
+        }
+
+        return result
+    }, [date, type, ageRange])
+
     const { data } = useQuery({
-        queryKey: getQueryKey(date),
-        queryFn: () => getStopSearchData(date)
+        queryKey: getQueryKey(filters),
+        queryFn: () => getStopSearchData(filters)
     })
 
     console.log("data", data)

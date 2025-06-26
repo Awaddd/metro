@@ -1,7 +1,5 @@
 "use client"
 
-import { useCtx } from "@/state"
-import { ALLOWED_AGE_RANGES, ALLOWED_TYPES, StopSearchData } from "@/types/stop-search"
 import {
     Select,
     SelectContent,
@@ -11,11 +9,14 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
+import { useCtx } from "@/state"
+import { ALLOWED_TYPES, StopSearchData } from "@/types/stop-search"
 
 export default function () {
     const { type, updateType } = useCtx()
 
     return (
+        // if time allows fix controlled uncontrolled complaint
         <Select value={type ?? undefined} onValueChange={(value) => updateType(value as StopSearchData["type"])}>
             <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Select a type" />
@@ -27,7 +28,7 @@ export default function () {
                         if (!type) return null
 
                         return (
-                            <SelectItem value={type}>{type}</SelectItem>
+                            <SelectItem key={type} value={type}>{type}</SelectItem>
                         )
                     })}
                 </SelectGroup>

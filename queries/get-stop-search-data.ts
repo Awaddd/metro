@@ -1,5 +1,5 @@
 import { baseUrl } from "@/lib/constants";
-import { FilteredStatistic } from "@/types/stats";
+import { FilteredStatistic, FilterParams } from "@/types/stats";
 
 type ReturnType = {
   statistics: FilteredStatistic;
@@ -8,24 +8,26 @@ type ReturnType = {
 };
 
 export default async function (
-  date?: string,
-  ageRange?: string,
-  type?: string
+  filters: FilterParams
 ): Promise<ReturnType | undefined> {
-  console.log(`getting data for date (${date ? date : "ALL"})`);
+  console.log(
+    `getting data for month (${filters.month ? filters.month : "ALL"})`
+  );
+
   const url = new URL("/api/stop-search-data", baseUrl);
 
-  if (date) {
-    url.searchParams.set("date", date);
+  if (filters.month) {
+    url.searchParams.set("month", filters.month);
   }
 
-  if (ageRange) {
-    url.searchParams.set("ageRange", ageRange);
+  if (filters.ageRange) {
+    url.searchParams.set("age", filters.ageRange);
   }
 
-  if (type) {
-    url.searchParams.set("type", type);
+  if (filters.type) {
+    url.searchParams.set("type", filters.type);
   }
+
   try {
     const response = await fetch(url.toString());
     return await response.json();
