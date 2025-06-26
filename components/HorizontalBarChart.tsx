@@ -66,8 +66,8 @@ export default function () {
     return (
         <Card className="w-full">
             <CardHeader>
-                <CardTitle>Bar Chart - Horizontal</CardTitle>
-                <CardDescription>January - June 2024</CardDescription>
+                <CardTitle>Object of search</CardTitle>
+                <CardDescription>This chart shows the object of search distribution for the metropolitan police stop and search data</CardDescription>
             </CardHeader>
             <CardContent className="w-full h-full">
                 <ChartContainer config={chartConfig ?? {}} className="h-full w-full">
@@ -84,7 +84,7 @@ export default function () {
                                 axisLine={false}
                                 tickFormatter={(value) => value.slice(0, 3)}
                                 tick={({ x, y, payload }) => {
-                                    const text = payload.value
+                                    const text = capitaliseFirstLetter(payload.value)
                                     const truncated = text.split(" ")[0]
 
                                     return (
@@ -107,6 +107,7 @@ export default function () {
                                                 {truncated}
                                             </text>
                                         </g>
+
                                     )
                                 }}
                             />

@@ -5,3 +5,7 @@ export async function runInBackground(task: () => Promise<void>) {
     console.error("Failed to execute background task, original error", e)
   );
 }
+
+export function capitaliseFirstLetter(text: string) {
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}
