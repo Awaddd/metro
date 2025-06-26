@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/chart"
 import { useSearch } from "@/hooks/use-search"
 import { useMemo } from "react"
+import { capitaliseFirstLetter } from "@/lib/helpers"
 
 export default function () {
     const { data } = useSearch()
