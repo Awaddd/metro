@@ -227,14 +227,12 @@ function getTotals(data: StatisticDocument[]): FilteredStatistic {
         totalSearches: previous.totalSearches + next.totalSearches,
         arrests: previous.arrests + next.arrests,
         daysWithData: previous.daysWithData + next.daysWithData,
-        genders: genders,
       };
     },
     {
       totalSearches: 0,
       arrests: 0,
       daysWithData: 0,
-      genders,
     }
   );
 
@@ -244,6 +242,7 @@ function getTotals(data: StatisticDocument[]): FilteredStatistic {
     type: null,
     arrestRate: (totals.arrests / totals.totalSearches) * 100,
     averagePerDay: totals.totalSearches / totals.daysWithData,
+    genders: Object.fromEntries(genders),
     mostSearchedGender: getMostSearchedItem(genders),
     ...totals,
   };

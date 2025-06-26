@@ -1,15 +1,8 @@
 "use client"
 
+import { useSearch } from "@/hooks/use-search";
 import { LucideActivity, LucidePercentCircle, LucideSearch, LucideUsers } from "lucide-react";
 import Panel from "./Panel";
-import { useCtx } from "@/state";
-import { format } from "date-fns";
-import { useQuery } from "@tanstack/react-query";
-import { getQueryKey } from "@/lib/get-query-key";
-import getStopSearchData from "@/queries/get-stop-search-data";
-import { FilterParams } from "@/types/stats";
-import { useMemo } from "react";
-import { useSearch } from "@/hooks/use-search";
 
 export default function () {
     const { data } = useSearch()

@@ -1,12 +1,14 @@
 import { StopSearchData } from "./stop-search";
 
+// consider 2 types, one for what is held in mongo i.e. raw vals
+// and one to hold the computed vals that are shown to the end user
 export type StopSearchStatistics = {
   totalSearches: number;
   daysWithData: number;
   averagePerDay?: number;
   arrests: number;
   arrestRate?: number;
-  genders: Map<string, number>;
+  genders: Map<string, number> | Record<string, any>;
   mostSearchedGender?: string | null;
 };
 
