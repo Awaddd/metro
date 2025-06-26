@@ -236,6 +236,9 @@ function getTotals(data: StatisticDocument[]): FilteredStatistic {
     }
   );
 
+  const { mostSearched: mostSearchedGender, value: mostSearchedGenderValue } =
+    getMostSearchedItem(genders);
+
   return {
     month: null,
     ageRange: null,
@@ -243,7 +246,8 @@ function getTotals(data: StatisticDocument[]): FilteredStatistic {
     arrestRate: (totals.arrests / totals.totalSearches) * 100,
     averagePerDay: totals.totalSearches / totals.daysWithData,
     genders: Object.fromEntries(genders),
-    mostSearchedGender: getMostSearchedItem(genders),
+    mostSearchedGender,
+    mostSearchedGenderValue,
     ...totals,
   };
 }
@@ -259,5 +263,8 @@ function getMostSearchedItem(items: Map<string, number>) {
     }
   }
 
-  return mostSearched;
+  return {
+    mostSearched,
+    value: greatestValue,
+  };
 }

@@ -104,16 +104,16 @@ export default function () {
                                                 <tspan
                                                     x={viewBox.cx}
                                                     y={viewBox.cy}
-                                                    className="fill-foreground text-3xl font-bold"
+                                                    className="fill-foreground text-2xl font-bold"
                                                 >
-                                                    313
+                                                    {data?.statistics.mostSearchedGenderValue}
                                                 </tspan>
                                                 <tspan
                                                     x={viewBox.cx}
                                                     y={(viewBox.cy || 0) + 24}
-                                                    className="fill-muted-foreground"
+                                                    className="fill-muted-foreground text-sm"
                                                 >
-                                                    Records
+                                                    {data?.statistics.mostSearchedGender}
                                                 </tspan>
                                             </text>
                                         )
