@@ -141,9 +141,12 @@ function calculateStatistics(data: StopSearchData[]) {
         // especially since we are dealing with many records
         const uniqueDays = new Set();
         const uniqueGenders = new Set();
+        const uniqueObjects = new Set();
+
         let arrestCount = 0;
         const ages = new Map<string, number>();
         const genders = new Map<string, number>();
+        const objectsOfSearch = new Map<string, number>();
 
         // do all calculations in one loop as we are going through a huge number of records
         // so inefficient to calculate separately
@@ -162,6 +165,7 @@ function calculateStatistics(data: StopSearchData[]) {
 
           uniqueDays.add(item.datetime.slice(0, 10));
           uniqueGenders.add(item.gender);
+          uniqueObjects.add(item.objectOfSearch);
 
           if (item.outcome?.toLowerCase() === "arrest") {
             arrestCount += 1;
@@ -172,6 +176,15 @@ function calculateStatistics(data: StopSearchData[]) {
 
           const genderKey = item.gender == null ? "null" : item.gender;
           genders.set(genderKey, (genders.get(genderKey) ?? 0) + 1);
+
+          // this is getting repetitive, clean up this file and make reusable function
+          const objectKey =
+            item.objectOfSearch == null ? "null" : item.objectOfSearch;
+
+          objectsOfSearch.set(
+            objectKey,
+            (objectsOfSearch.get(objectKey) ?? 0) + 1
+          );
         }
 
         const totalSearches = matchedItems.length;
@@ -188,6 +201,7 @@ function calculateStatistics(data: StopSearchData[]) {
           arrests: arrestCount,
           daysWithData: uniqueDays.size,
           genders: genders,
+          objectsOfSearch: objectsOfSearch,
         };
 
         statistics.push(statistic);
@@ -215,11 +229,18 @@ function lookUp(data: StatisticDocument[], filters: FilterParams) {
 
 function getTotals(data: StatisticDocument[]): FilteredStatistic {
   const genders = new Map<string, number>();
+  const objectsOfSearch = new Map<string, number>();
   const totals = data.reduce(
     (previous, next) => {
       if (next.genders) {
-        for (const [gender, count] of Object.entries(next.genders)) {
-          genders.set(gender, (genders.get(gender) ?? 0) + count);
+        for (const [key, count] of Object.entries(next.genders)) {
+          genders.set(key, (genders.get(key) ?? 0) + count);
+        }
+      }
+
+      if (next.objectsOfSearch) {
+        for (const [key, count] of Object.entries(next.objectsOfSearch)) {
+          objectsOfSearch.set(key, (objectsOfSearch.get(key) ?? 0) + count);
         }
       }
 
@@ -245,6 +266,7 @@ function getTotals(data: StatisticDocument[]): FilteredStatistic {
     type: null,
     arrestRate: (totals.arrests / totals.totalSearches) * 100,
     averagePerDay: totals.totalSearches / totals.daysWithData,
+    objectsOfSearch: Object.fromEntries(objectsOfSearch),
     genders: Object.fromEntries(genders),
     mostSearchedGender,
     mostSearchedGenderValue,
