@@ -169,7 +169,6 @@ function calculateStatistics(data: StopSearchData[]) {
         }
 
         const totalSearches = matchedItems.length;
-        const averagePerDay = totalSearches / uniqueDays.size;
 
         if (matchedItems.length === 0) {
           continue;
@@ -181,7 +180,7 @@ function calculateStatistics(data: StopSearchData[]) {
           type: type,
           totalSearches,
           arrests: arrestCount,
-          averagePerDay: averagePerDay,
+          daysWithData: uniqueDays.size,
           mostSearchedAgeGroup: "null",
         };
 
@@ -210,19 +209,16 @@ function lookUp(data: StatisticDocument[], filters: FilterParams) {
 
 function getTotals(data: StatisticDocument[]): FilteredStatistic {
   const totals = data.reduce(
-    (previous, next) => {
-      const n = {
-        totalSearches: previous.totalSearches + next.totalSearches,
-        arrests: previous.arrests + next.arrests,
-        averagePerDay: previous.averagePerDay,
-        mostSearchedAgeGroup: previous.mostSearchedAgeGroup,
-      };
-      return n;
-    },
+    (previous, next) => ({
+      totalSearches: previous.totalSearches + next.totalSearches,
+      arrests: previous.arrests + next.arrests,
+      daysWithData: previous.daysWithData,
+      mostSearchedAgeGroup: previous.mostSearchedAgeGroup,
+    }),
     {
       totalSearches: 0,
       arrests: 0,
-      averagePerDay: 0,
+      daysWithData: 0,
       mostSearchedAgeGroup: null,
     }
   );
@@ -232,6 +228,7 @@ function getTotals(data: StatisticDocument[]): FilteredStatistic {
     ageRange: null,
     type: null,
     arrestRate: (totals.arrests / totals.totalSearches) * 100,
+    averagePerDay: totals.totalSearches / totals.daysWithData,
     ...totals,
   };
 }
