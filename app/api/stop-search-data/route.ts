@@ -7,7 +7,7 @@ import {
 } from "@/services/stopSearch/cache";
 import { fetchStopSearchData } from "@/services/stopSearch/fetch";
 import { transformData } from "@/services/stopSearch/transform";
-import { StopSearchFilters } from "@/types/stop-search";
+import { StopSearchData, StopSearchFilters } from "@/types/stop-search";
 import { Db } from "mongodb";
 import { NextResponse } from "next/server";
 
@@ -20,47 +20,7 @@ export async function GET(request: Request) {
   try {
     const { data, stale, lastUpdated } = await getData({});
 
-    console.log("data", data);
-
-    const totalSearches = data.length;
-
-    // when determining uniqye days, slice date instead of formatting with date-fns for improved performance
-    // creating a date obj and formatting each would add unnecessary computation
-    // especially since we are dealing with many records
-    const uniqueDays = new Set();
-    let arrestCount = 0;
-    const ages = new Map<string, number>();
-    const ethnicities = new Map<string, number>();
-
-    // do all calculations in one loop as we are going through a huge number of records
-    // so inefficient to calculate separately
-    for (const item of data) {
-      uniqueDays.add(item.datetime.slice(0, 10));
-
-      if (item.outcome?.toLowerCase() === "arrest") {
-        arrestCount += 1;
-      }
-
-      const key = item.ageRange == null ? "null" : item.ageRange;
-      ages.set(key, (ages.get(key) ?? 0) + 1);
-
-      const ethnicity =
-        item.selfDefinedEthnicity == null ? "null" : item.selfDefinedEthnicity;
-      ethnicities.set(ethnicity, (ethnicities.get(ethnicity) ?? 0) + 1);
-    }
-
-    const averagePerDay = totalSearches / uniqueDays.size;
-    const arrestRate = (arrestCount / totalSearches) * 100;
-
-    const stats = {
-      overview: {
-        totalSearches,
-        averagePerDay,
-        arrestRate: Math.round(arrestRate * 10) / 10,
-        mostSearchedAgeGroup: getMostSearchedAgeGroup(ages),
-        ethnicities,
-      },
-    };
+    const stats = calculateStatistics(data);
 
     console.log("stats", stats);
 
@@ -109,6 +69,50 @@ async function fetchAndPersist(db: Db) {
   const freshData = await fetchStopSearchData();
   const transformed = freshData.map(transformData);
   await persist(db, transformed);
+}
+
+function calculateStatistics(data: StopSearchData[]) {
+  console.log("data", data);
+
+  const totalSearches = data.length;
+
+  // when determining uniqye days, slice date instead of formatting with date-fns for improved performance
+  // creating a date obj and formatting each would add unnecessary computation
+  // especially since we are dealing with many records
+  const uniqueDays = new Set();
+  let arrestCount = 0;
+  const ages = new Map<string, number>();
+  const ethnicities = new Map<string, number>();
+
+  // do all calculations in one loop as we are going through a huge number of records
+  // so inefficient to calculate separately
+  for (const item of data) {
+    uniqueDays.add(item.datetime.slice(0, 10));
+
+    if (item.outcome?.toLowerCase() === "arrest") {
+      arrestCount += 1;
+    }
+
+    const key = item.ageRange == null ? "null" : item.ageRange;
+    ages.set(key, (ages.get(key) ?? 0) + 1);
+
+    const ethnicity =
+      item.selfDefinedEthnicity == null ? "null" : item.selfDefinedEthnicity;
+    ethnicities.set(ethnicity, (ethnicities.get(ethnicity) ?? 0) + 1);
+  }
+
+  const averagePerDay = totalSearches / uniqueDays.size;
+  const arrestRate = (arrestCount / totalSearches) * 100;
+
+  return {
+    overview: {
+      totalSearches,
+      averagePerDay: Math.round(averagePerDay * 10) / 10,
+      arrestRate: Math.round(arrestRate * 10) / 10,
+      mostSearchedAgeGroup: getMostSearchedAgeGroup(ages),
+      ethnicities,
+    },
+  };
 }
 
 function getMostSearchedAgeGroup(ages: Map<string, number>) {
