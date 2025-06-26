@@ -17,26 +17,54 @@ import {
     ChartTooltip,
     ChartTooltipContent,
 } from "@/components/ui/chart"
-
-export const description = "A horizontal bar chart"
-
-const chartData = [
-    { month: "January", desktop: 186 },
-    { month: "February", desktop: 305 },
-    { month: "March", desktop: 237 },
-    { month: "April", desktop: 73 },
-    { month: "May", desktop: 209 },
-    { month: "June", desktop: 214 },
-]
-
-const chartConfig = {
-    desktop: {
-        label: "Desktop",
-        color: "var(--chart-1)",
-    },
-} satisfies ChartConfig
+import { useSearch } from "@/hooks/use-search"
+import { useMemo } from "react"
 
 export default function () {
+    const { data } = useSearch()
+
+    console.log("objects", data?.statistics.objectsOfSearch)
+
+    const { chartConfig, chartData } = useMemo(() => {
+        if (!data?.statistics.objectsOfSearch) {
+            return {}
+        }
+
+        const chartData: {
+            object: string;
+            value: number;
+            fill: string;
+        }[] = []
+
+        const chartConfig: ChartConfig = {
+            value: {
+                label: "Value",
+            }
+        }
+
+        let i = 0
+
+        for (const [key, value] of Object.entries(data.statistics.objectsOfSearch)) {
+            i++;
+
+            chartData.push({
+                object: key.toLowerCase(),
+                value: value,
+                fill: `var(--color-${key.toLowerCase()})`
+            })
+
+            chartConfig[key.toLowerCase()] = {
+                label: key,
+                color: `var(--chart-${i})`
+            }
+        }
+
+        return {
+            chartData,
+            chartConfig
+        }
+    }, [data?.statistics.objectsOfSearch])
+
     return (
         <Card className="w-full">
             <CardHeader>
@@ -44,7 +72,7 @@ export default function () {
                 <CardDescription>January - June 2024</CardDescription>
             </CardHeader>
             <CardContent>
-                <ChartContainer config={chartConfig}>
+                <ChartContainer config={chartConfig ?? {}}>
                     <BarChart
                         accessibilityLayer
                         data={chartData}
@@ -53,9 +81,9 @@ export default function () {
                             left: -20,
                         }}
                     >
-                        <XAxis type="number" dataKey="desktop" hide />
+                        <XAxis type="number" dataKey="value" hide />
                         <YAxis
-                            dataKey="month"
+                            dataKey="object"
                             type="category"
                             tickLine={false}
                             tickMargin={10}
@@ -66,16 +94,16 @@ export default function () {
                             cursor={false}
                             content={<ChartTooltipContent hideLabel />}
                         />
-                        <Bar dataKey="desktop" fill="var(--color-desktop)" radius={5} />
+                        <Bar dataKey="value" fill="var(--color-value)" radius={5} />
                     </BarChart>
                 </ChartContainer>
             </CardContent>
             <CardFooter className="flex-col items-start gap-2 text-sm">
                 <div className="flex gap-2 leading-none font-medium">
-                    Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+                    Trending up by 5.2% this object <TrendingUp className="h-4 w-4" />
                 </div>
                 <div className="text-muted-foreground leading-none">
-                    Showing total visitors for the last 6 months
+                    Showing total visitors for the last 6 objects
                 </div>
             </CardFooter>
         </Card>
