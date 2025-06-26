@@ -52,6 +52,17 @@ type Location = {
   street: Street;
 };
 
-export type StopSearchFilters = {
-  date?: string | null;
-};
+export const ALLOWED_AGE_RANGES = [
+  "under 10",
+  "10-17",
+  "18-24",
+  "25-34",
+  "over 34",
+  null,
+];
+
+export const ALLOWED_TYPES = [
+  "Person search",
+  "Vehicle search",
+  "Person and Vehicle search",
+];

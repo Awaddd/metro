@@ -1,3 +1,7 @@
+import {
+  ALLOWED_AGE_RANGES,
+  ALLOWED_TYPES,
+} from "./../../../types/stop-search";
 import { runInBackground } from "@/lib/helpers";
 import client from "@/lib/mongodb";
 import {
@@ -9,10 +13,10 @@ import { fetchStopSearchData } from "@/services/stopSearch/fetch";
 import { transformData } from "@/services/stopSearch/transform";
 import {
   FilteredStatistic,
+  FilterParams,
   StatisticDocument,
-  Statistics,
 } from "@/types/stats";
-import { StopSearchData, StopSearchFilters } from "@/types/stop-search";
+import { StopSearchData } from "@/types/stop-search";
 import { Db } from "mongodb";
 import { NextResponse } from "next/server";
 
@@ -20,10 +24,24 @@ export async function GET(request: Request) {
   const url = new URL(request.url);
 
   // get date filter if present
-  const date = url.searchParams.get("date");
+  const month = url.searchParams.get("date");
+  const ageParam = url.searchParams.get("age");
+  const typeParam = url.searchParams.get("type");
+
+  const ageRange = (
+    ALLOWED_AGE_RANGES.includes(ageParam) ? ageParam : null
+  ) as FilterParams["ageRange"];
+
+  const type = (
+    ALLOWED_TYPES.includes(typeParam ?? "") ? typeParam : null
+  ) as FilterParams["type"];
 
   try {
-    const { allData, data, stale, lastUpdated } = await getData({});
+    const { allData, data, stale, lastUpdated } = await getData({
+      month,
+      ageRange,
+      type,
+    });
 
     return NextResponse.json({
       allData,
@@ -39,7 +57,7 @@ export async function GET(request: Request) {
   }
 }
 
-async function getData(filters: StopSearchFilters) {
+async function getData(filters: FilterParams) {
   const db = client.db("metro");
 
   const { stale, hasData, lastUpdated } = await validateCache(db);
@@ -58,10 +76,11 @@ async function getData(filters: StopSearchFilters) {
     console.log("fresh cached data is available, loading from cache...");
   }
 
-  const data = await loadFromCache(db, filters);
+  const data = await loadFromCache(db);
   console.time("calculateStatisticsTotal");
 
   // now lookup with filters, either in db or programmatically
+  const filteredData = lookUp(data, filters);
 
   const allData = getTotals(data);
   console.timeEnd("calculateStatisticsTotal");
@@ -142,6 +161,24 @@ function calculateStatistics(data: StopSearchData[]) {
 
   console.timeEnd("calculateStatistics");
   return statistics;
+}
+
+function lookUp(data: StatisticDocument[], filters: FilterParams) {
+  console.time("filterStatistics");
+
+  const filtered = data.filter((item) => {
+    if (
+      item.month === filters.month &&
+      item.ageRange === filters.ageRange &&
+      item.type === filters.type
+    ) {
+      return item;
+    }
+    return false;
+  }) as FilteredStatistic[];
+
+  console.timeEnd("filterStatistics");
+  return filtered;
 }
 
 function getTotals(data: StatisticDocument[]): FilteredStatistic {

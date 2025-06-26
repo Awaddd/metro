@@ -1,6 +1,5 @@
 import { DATA_COLLECTION, META_COLLECTION } from "@/lib/constants";
 import { StatisticDocument } from "@/types/stats";
-import { StopSearchFilters } from "@/types/stop-search";
 import { Db } from "mongodb";
 
 type MetaDocument = {
@@ -59,7 +58,7 @@ export async function validateCache(db: Db): Promise<CacheStatus> {
   }
 }
 
-export async function loadFromCache(db: Db, filters: StopSearchFilters) {
+export async function loadFromCache(db: Db) {
   const dataCollection = db.collection<StatisticDocument>(DATA_COLLECTION);
 
   try {
