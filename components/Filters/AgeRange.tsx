@@ -11,13 +11,17 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
+import { SelectSeparator } from "@radix-ui/react-select"
+import { Button } from "../ui/button"
+import { useState } from "react"
+import ClearSelect from "../ClearSelect"
 
 export default function () {
     const { ageRange, updateAgeRange } = useCtx()
 
     return (
         // if time allows fix controlled uncontrolled complaint
-        <Select value={ageRange ?? undefined} onValueChange={(value) => updateAgeRange(value as StopSearchData["ageRange"])}>
+        <Select value={ageRange ?? ""} onValueChange={(value) => updateAgeRange(value as StopSearchData["ageRange"])}>
             <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Select an age range" />
             </SelectTrigger>
@@ -32,6 +36,7 @@ export default function () {
                         )
                     })}
                 </SelectGroup>
+                <ClearSelect value={ageRange} updateValue={updateAgeRange} />
             </SelectContent>
         </Select>
     );

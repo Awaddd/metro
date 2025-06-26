@@ -11,13 +11,14 @@ import {
 } from "@/components/ui/select"
 import { useCtx } from "@/state"
 import { ALLOWED_TYPES, StopSearchData } from "@/types/stop-search"
+import ClearSelect from "../ClearSelect"
 
 export default function () {
     const { type, updateType } = useCtx()
 
     return (
         // if time allows fix controlled uncontrolled complaint
-        <Select value={type ?? undefined} onValueChange={(value) => updateType(value as StopSearchData["type"])}>
+        <Select value={type ?? ""} onValueChange={(value) => updateType(value as StopSearchData["type"])}>
             <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Select a type" />
             </SelectTrigger>
@@ -32,6 +33,7 @@ export default function () {
                         )
                     })}
                 </SelectGroup>
+                <ClearSelect value={type} updateValue={updateType} />
             </SelectContent>
         </Select>
     );
