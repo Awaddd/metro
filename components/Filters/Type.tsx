@@ -12,9 +12,15 @@ import {
 import { useCtx } from "@/state"
 import { ALLOWED_TYPES, StopSearchData } from "@/types/stop-search"
 import ClearSelect from "../ClearSelect"
+import { useMemo } from "react"
 
 export default function () {
-    const { type, updateType } = useCtx()
+    const state = useCtx()
+
+    const { type, updateType } = useMemo(() => ({
+        type: state.type as StopSearchData["type"] | null,
+        updateType: state.updateType as (type: StopSearchData["type"] | null) => void
+    }), [state.type, state.updateType])
 
     return (
         // if time allows fix controlled uncontrolled complaint
