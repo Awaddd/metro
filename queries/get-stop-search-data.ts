@@ -1,19 +1,10 @@
 import { baseUrl } from "@/lib/constants";
+import { Stats } from "@/types/stats";
 
 type ReturnType = {
   stats: Stats | null;
   lastUpdated: Date | null;
   stale: boolean;
-};
-
-type Stats = {
-  overview: {
-    totalSearches: number;
-    averagePerDay: number;
-    arrestRate: number;
-    mostSearchedAgeGroup: string | null;
-    ethnicities: Map<string, number>;
-  };
 };
 
 export default async function (date?: string): Promise<ReturnType | undefined> {

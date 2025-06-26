@@ -1,4 +1,5 @@
 import { DATA_COLLECTION, META_COLLECTION } from "@/lib/constants";
+import { Stats } from "@/types/stats";
 import {
   StopSearchData,
   StopSearchFilters,
@@ -76,16 +77,11 @@ export async function loadFromCache(db: Db, filters: StopSearchFilters) {
   }
 }
 
-export async function persist(db: Db, docs: StopSearchData[]) {
+export async function persist(db: Db, docs: Stats[]) {
   const dataCollection = db.collection(DATA_COLLECTION);
   const meta = db.collection(META_COLLECTION);
 
   let updated = false;
-
-  // do nothing if no data
-  if (!docs || docs.length === 0) {
-    return updated;
-  }
 
   try {
     const result = await dataCollection.deleteMany({});

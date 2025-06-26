@@ -68,11 +68,12 @@ async function getData(filters: StopSearchFilters) {
 async function fetchAndPersist(db: Db) {
   const freshData = await fetchStopSearchData();
   const transformed = freshData.map(transformData);
-  await persist(db, transformed);
+  const stats = calculateStatistics(transformed);
+  await persist(db, stats);
 }
 
 function calculateStatistics(data: StopSearchData[]) {
-  console.log("data", data);
+  console.log("total data", data.length);
 
   const totalSearches = data.length;
 
@@ -105,13 +106,11 @@ function calculateStatistics(data: StopSearchData[]) {
   const arrestRate = (arrestCount / totalSearches) * 100;
 
   return {
-    overview: {
-      totalSearches,
-      averagePerDay: Math.round(averagePerDay * 10) / 10,
-      arrestRate: Math.round(arrestRate * 10) / 10,
-      mostSearchedAgeGroup: getMostSearchedAgeGroup(ages),
-      ethnicities,
-    },
+    totalSearches,
+    averagePerDay: Math.round(averagePerDay * 10) / 10,
+    arrestRate: Math.round(arrestRate * 10) / 10,
+    mostSearchedAgeGroup: getMostSearchedAgeGroup(ages),
+    ethnicities,
   };
 }
 
