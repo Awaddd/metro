@@ -61,6 +61,7 @@ export async function GET(request: Request) {
 }
 
 async function getData(filters: FilterParams) {
+  console.time("totalGetData");
   const db = client.db("metro");
 
   const { stale, hasData, lastUpdated } = await validateCache(db);
@@ -82,19 +83,20 @@ async function getData(filters: FilterParams) {
 
   const data = await loadFromCache(db);
 
+  // fix this logic, this is always true
   const filtersAreApplied = !!(
-    filters?.month ??
-    filters?.ageRange ??
+    filters?.month ||
+    filters?.ageRange ||
     filters?.type
   );
+
   console.log("are filters applied", filtersAreApplied);
+  console.timeEnd("totalGetData");
 
   // must always return one document, either the unfiltered one with all of the records showing
   // or another record filtered to a single filter or a combination of filters
   return {
-    statistics: filtersAreApplied
-      ? getTotals(lookUp(data, filters))
-      : getTotals(data),
+    statistics: getTotals(data),
     stale,
     lastUpdated,
   };

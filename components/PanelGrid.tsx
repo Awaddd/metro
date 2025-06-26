@@ -17,6 +17,8 @@ export default function () {
         queryFn: () => getStopSearchData(date)
     })
 
+    console.log("data", data)
+
     return (
         <>
             <Panel label="Total Searches" value={data?.statistics.totalSearches ?? 0} icon={LucideSearch} />

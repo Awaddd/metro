@@ -45,3 +45,52 @@ Another idea I had was to simply reduce the payload size of the stored objects w
 It's important that we move any slowness to when we initially write data to the cache, and that we offload that write from the end user. Initially I wanted to do a fire and forget but it might just be simpler to do a cron job. My concerns with doing a cron was that it would be difficult to deploy and would require its own infrastructure separate from the main app, but that tradeoff might be worth it now to ensure we get a great user experience without overcomplicating the app.
 
 Back to the pre-compute strategy, one solution to fix the filter problem is to store all of the possible combinations of filters on the data. i.e. assuming we selected the following filters of month, age range and type (person search etc), we would have around 500 unique combinations as opposed to the hundreds of thousands of raw data we were storing before. Currently we have about 28 months of metropolitan police data, 6 age ranges including null and 3 types of search. 28 x 6 x 3 = 504
+
+## Notes 2
+
+Implemented a bare bones version of the pre-compute strategy and I'm pleased with the results. As before, I'm fetching 7 months worth of data. We still have a slow ingestion, but this time it's due to the time it takes to fetch from the police API as opposed to the time it takes to write the records to Mongo.
+
+Here are the logs
+
+fetchSevenRecords: 14.322s
+
+unique months Set(7) {
+'2024-08',
+'2024-07',
+'2024-06',
+'2024-05',
+'2024-04',
+'2024-03',
+'2024-02'
+}
+
+unique age groups Set(6) {
+'over 34',
+'18-24',
+null,
+'25-34',
+'10-17',
+'under 10'
+}
+
+unique types Set(3) {
+'Person search',
+'Vehicle search',
+'Person and Vehicle search'
+}
+
+total num of combinations 126
+
+calculateStatistics: 1.261s
+
+Deleted 0 record(s)
+Inserted 90 record(s)
+updated meta with new ObjectId('685d24f36292153d68582f27')
+
+overallFetchAndPersistComputedStatistics: 15.756s
+
+filterStatistics: 0.455ms
+
+As you can see, the bulk of the time is on the fetch. This would only happen when the cache is completely empty. We can improve the UX so that if data is stale, we fetch in background and indicate that to the user and show stale data in the mean time. If cache is present, things should load immediately as we are barely dealing with any files, 90 in this case.
+
+Now when loading from cache, the whole read takes 48.423ms
