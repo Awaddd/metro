@@ -6,9 +6,8 @@ export type StopSearchStatistics = {
   averagePerDay?: number;
   arrests: number;
   arrestRate?: number;
-  mostSearchedAgeGroup: string | null;
-  //   ethnicities: Map<string, number>;
-  // ... other statistics
+  genders: Map<string, number>;
+  mostSearchedGender?: string | null;
 };
 
 // this is 1 statistic with its combination of filters, we could have hundreds like this

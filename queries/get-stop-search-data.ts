@@ -31,7 +31,7 @@ export default async function (
   try {
     const response = await fetch(url.toString());
     return await response.json();
-  } catch (error) {
-    console.error(error);
+  } catch (e) {
+    console.error("Error fetching from route, original error", e);
   }
 }

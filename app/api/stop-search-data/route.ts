@@ -140,8 +140,10 @@ function calculateStatistics(data: StopSearchData[]) {
         // creating a date obj and formatting each would add unnecessary computation
         // especially since we are dealing with many records
         const uniqueDays = new Set();
+        const uniqueGenders = new Set();
         let arrestCount = 0;
         const ages = new Map<string, number>();
+        const genders = new Map<string, number>();
 
         // do all calculations in one loop as we are going through a huge number of records
         // so inefficient to calculate separately
@@ -159,6 +161,7 @@ function calculateStatistics(data: StopSearchData[]) {
           matchedItems.push(item);
 
           uniqueDays.add(item.datetime.slice(0, 10));
+          uniqueGenders.add(item.gender);
 
           if (item.outcome?.toLowerCase() === "arrest") {
             arrestCount += 1;
@@ -166,6 +169,9 @@ function calculateStatistics(data: StopSearchData[]) {
 
           const key = item.ageRange == null ? "null" : item.ageRange;
           ages.set(key, (ages.get(key) ?? 0) + 1);
+
+          const genderKey = item.gender == null ? "null" : item.gender;
+          genders.set(genderKey, (genders.get(genderKey) ?? 0) + 1);
         }
 
         const totalSearches = matchedItems.length;
@@ -181,7 +187,7 @@ function calculateStatistics(data: StopSearchData[]) {
           totalSearches,
           arrests: arrestCount,
           daysWithData: uniqueDays.size,
-          mostSearchedAgeGroup: "null",
+          genders: genders,
         };
 
         statistics.push(statistic);
@@ -208,18 +214,27 @@ function lookUp(data: StatisticDocument[], filters: FilterParams) {
 }
 
 function getTotals(data: StatisticDocument[]): FilteredStatistic {
+  const genders = new Map<string, number>();
   const totals = data.reduce(
-    (previous, next) => ({
-      totalSearches: previous.totalSearches + next.totalSearches,
-      arrests: previous.arrests + next.arrests,
-      daysWithData: previous.daysWithData,
-      mostSearchedAgeGroup: previous.mostSearchedAgeGroup,
-    }),
+    (previous, next) => {
+      if (next.genders) {
+        for (const [gender, count] of Object.entries(next.genders)) {
+          genders.set(gender, (genders.get(gender) ?? 0) + count);
+        }
+      }
+
+      return {
+        totalSearches: previous.totalSearches + next.totalSearches,
+        arrests: previous.arrests + next.arrests,
+        daysWithData: previous.daysWithData + next.daysWithData,
+        genders: genders,
+      };
+    },
     {
       totalSearches: 0,
       arrests: 0,
       daysWithData: 0,
-      mostSearchedAgeGroup: null,
+      genders,
     }
   );
 
@@ -229,68 +244,21 @@ function getTotals(data: StatisticDocument[]): FilteredStatistic {
     type: null,
     arrestRate: (totals.arrests / totals.totalSearches) * 100,
     averagePerDay: totals.totalSearches / totals.daysWithData,
+    mostSearchedGender: getMostSearchedItem(genders),
     ...totals,
   };
 }
 
-// todo: take real calculations from here
-
-// function calculateStatistics(data: StopSearchData[]) {
-//   console.log("total data", data.length);
-
-//   const totalSearches = data.length;
-
-//   // when determining uniqye days, slice date instead of formatting with date-fns for improved performance
-//   // creating a date obj and formatting each would add unnecessary computation
-//   // especially since we are dealing with many records
-//   const uniqueDays = new Set();
-//   let arrestCount = 0;
-//   const ages = new Map<string, number>();
-//   const ethnicities = new Map<string, number>();
-
-//   // do all calculations in one loop as we are going through a huge number of records
-//   // so inefficient to calculate separately
-//   for (const item of data) {
-//     uniqueDays.add(item.datetime.slice(0, 10));
-
-//     if (item.outcome?.toLowerCase() === "arrest") {
-//       arrestCount += 1;
-//     }
-
-//     const key = item.ageRange == null ? "null" : item.ageRange;
-//     ages.set(key, (ages.get(key) ?? 0) + 1);
-
-//     const ethnicity =
-//       item.selfDefinedEthnicity == null ? "null" : item.selfDefinedEthnicity;
-//     ethnicities.set(ethnicity, (ethnicities.get(ethnicity) ?? 0) + 1);
-//   }
-
-//   const averagePerDay = totalSearches / uniqueDays.size;
-//   const arrestRate = (arrestCount / totalSearches) * 100;
-
-//   return {
-//     totalSearches,
-//     averagePerDay: Math.round(averagePerDay * 10) / 10,
-//     arrestRate: Math.round(arrestRate * 10) / 10,
-//     mostSearchedAgeGroup: getMostSearchedAgeGroup(ages),
-//     ethnicities,
-//   };
-// }
-
-function getMostSearchedAgeGroup(ages: Map<string, number>) {
+function getMostSearchedItem(items: Map<string, number>) {
   let greatestValue = 0;
-  let mostSearchedAgeGroup = null;
+  let mostSearched = null;
 
-  for (const [key, value] of ages) {
+  for (const [key, value] of items) {
     if (value > greatestValue) {
       greatestValue = value;
-      mostSearchedAgeGroup = key;
+      mostSearched = key;
     }
   }
 
-  console.log(
-    `Most searched age group ${mostSearchedAgeGroup} with value ${greatestValue}`
-  );
-
-  return mostSearchedAgeGroup;
+  return mostSearched;
 }
