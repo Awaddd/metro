@@ -1,7 +1,7 @@
 "use client"
 
 import { TrendingUp } from "lucide-react"
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
+import { Bar, BarChart, CartesianGrid, ResponsiveContainer, XAxis, YAxis } from "recharts"
 
 import {
     Card,
@@ -33,7 +33,7 @@ export default function () {
         const chartData: {
             object: string;
             value: number;
-            fill: string;
+            fill?: string;
         }[] = []
 
         const chartConfig: ChartConfig = {
@@ -50,12 +50,10 @@ export default function () {
             chartData.push({
                 object: key.toLowerCase(),
                 value: value,
-                fill: `var(--color-${key.toLowerCase()})`
             })
 
             chartConfig[key.toLowerCase()] = {
                 label: key,
-                color: `var(--chart-${i})`
             }
         }
 
@@ -71,33 +69,56 @@ export default function () {
                 <CardTitle>Bar Chart - Horizontal</CardTitle>
                 <CardDescription>January - June 2024</CardDescription>
             </CardHeader>
-            <CardContent>
-                <ChartContainer config={chartConfig ?? {}}>
-                    <BarChart accessibilityLayer data={chartData}>
-                        <CartesianGrid vertical={false} />
-                        <XAxis
-                            dataKey="object"
-                            tickLine={false}
-                            tickMargin={10}
-                            axisLine={false}
-                            tickFormatter={(value) => value.slice(0, 3)}
-                        />
-                        <ChartTooltip
-                            cursor={false}
-                            content={<ChartTooltipContent hideLabel />}
-                        />
-                        <Bar dataKey="value" fill="var(--color-value)" radius={8} />
-                    </BarChart>
+            <CardContent className="w-full h-full">
+                <ChartContainer config={chartConfig ?? {}} className="h-full w-full">
+                    <ResponsiveContainer width="100%" height="100%">
+                        <BarChart
+                            data={chartData}
+                            margin={{ left: 40, bottom: 80 }}
+                        >
+                            <CartesianGrid vertical={false} />
+                            <XAxis
+                                dataKey="object"
+                                tickLine={false}
+                                tickMargin={10}
+                                axisLine={false}
+                                tickFormatter={(value) => value.slice(0, 3)}
+                                tick={({ x, y, payload }) => {
+                                    const text = payload.value
+                                    const truncated = text.split(" ")[0]
+
+                                    return (
+                                        <g transform={`translate(${x},${y})`}>
+                                            <text
+                                                transform="rotate(-55)"
+                                                textAnchor="end"
+                                                dominantBaseline="middle"
+                                                className="font-black text-black text-lg"
+                                                style={{
+                                                    userSelect: "none",
+                                                    fontWeight: 600,
+                                                    fontSize: 14,
+                                                    fill: "#333",
+                                                    fontFamily: "'Inter', sans-serif",
+                                                    letterSpacing: "0.03em",
+                                                }}
+                                            >
+                                                <title>{text}</title>
+                                                {truncated}
+                                            </text>
+                                        </g>
+                                    )
+                                }}
+                            />
+                            <ChartTooltip
+                                cursor={false}
+                                content={<ChartTooltipContent hideLabel />}
+                            />
+                            <Bar dataKey="value" fill="var(--color-chart-3)" radius={8} />
+                        </BarChart>
+                    </ResponsiveContainer>
                 </ChartContainer>
             </CardContent>
-            <CardFooter className="flex-col items-start gap-2 text-sm">
-                <div className="flex gap-2 leading-none font-medium">
-                    Trending up by 5.2% this object <TrendingUp className="h-4 w-4" />
-                </div>
-                <div className="text-muted-foreground leading-none">
-                    Showing total visitors for the last 6 objects
-                </div>
-            </CardFooter>
         </Card>
     )
 }
