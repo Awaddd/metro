@@ -1,8 +1,9 @@
 import { baseUrl } from "@/lib/constants";
-import { Stats } from "@/types/stats";
+import { FilteredStatistic } from "@/types/stats";
 
 type ReturnType = {
-  stats: Stats | null;
+  alLData: FilteredStatistic;
+  stats: FilteredStatistic[];
   lastUpdated: Date | null;
   stale: boolean;
 };

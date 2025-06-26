@@ -1,10 +1,6 @@
 import { DATA_COLLECTION, META_COLLECTION } from "@/lib/constants";
-import { Stats } from "@/types/stats";
-import {
-  StopSearchData,
-  StopSearchFilters,
-  StopSearchResponse,
-} from "@/types/stop-search";
+import { StatisticDocument } from "@/types/stats";
+import { StopSearchFilters } from "@/types/stop-search";
 import { Db } from "mongodb";
 
 type MetaDocument = {
@@ -64,7 +60,7 @@ export async function validateCache(db: Db): Promise<CacheStatus> {
 }
 
 export async function loadFromCache(db: Db, filters: StopSearchFilters) {
-  const dataCollection = db.collection<StopSearchData>(DATA_COLLECTION);
+  const dataCollection = db.collection<StatisticDocument>(DATA_COLLECTION);
 
   try {
     return await dataCollection.find().toArray();
@@ -77,8 +73,8 @@ export async function loadFromCache(db: Db, filters: StopSearchFilters) {
   }
 }
 
-export async function persist(db: Db, docs: Stats[]) {
-  const dataCollection = db.collection(DATA_COLLECTION);
+export async function persist(db: Db, docs: StatisticDocument[]) {
+  const dataCollection = db.collection<StatisticDocument>(DATA_COLLECTION);
   const meta = db.collection(META_COLLECTION);
 
   let updated = false;
