@@ -18,10 +18,10 @@ export default function () {
 
     return (
         <>
-            <Panel label="Total Searches" value={data?.stats?.overview.totalSearches ?? 0} icon={LucideSearch} />
-            <Panel label="Avg per Day" value={data?.stats?.overview.averagePerDay ?? 0} icon={LucideActivity} />
-            <Panel label="Arrest Rate (%)" value={`${data?.stats?.overview.arrestRate ?? 0}%`} icon={LucidePercentCircle} />
-            <Panel label="Most Searched Age Group" value={data?.stats?.overview.mostSearchedAgeGroup ?? "N/A"} icon={LucideUsers} />
+            <Panel label="Total Searches" value={data?.statistics.totalSearches ?? 0} icon={LucideSearch} />
+            <Panel label="Avg per Day" value={data?.statistics.averagePerDay ?? 0} icon={LucideActivity} />
+            <Panel label="Arrest Rate (%)" value={`${data?.statistics.arrestRate ?? 0}%`} icon={LucidePercentCircle} />
+            <Panel label="Most Searched Age Group" value={data?.statistics.mostSearchedAgeGroup ?? "N/A"} icon={LucideUsers} />
         </>
     )
 }

@@ -2,8 +2,7 @@ import { baseUrl } from "@/lib/constants";
 import { FilteredStatistic } from "@/types/stats";
 
 type ReturnType = {
-  alLData: FilteredStatistic;
-  stats: FilteredStatistic[];
+  statistics: FilteredStatistic;
   lastUpdated: Date | null;
   stale: boolean;
 };

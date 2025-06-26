@@ -37,15 +37,14 @@ export async function GET(request: Request) {
   ) as FilterParams["type"];
 
   try {
-    const { allData, data, stale, lastUpdated } = await getData({
+    const { statistics, stale, lastUpdated } = await getData({
       month,
       ageRange,
       type,
     });
 
     return NextResponse.json({
-      allData,
-      data,
+      statistics,
       stale,
       lastUpdated,
     });
@@ -77,17 +76,20 @@ async function getData(filters: FilterParams) {
   }
 
   const data = await loadFromCache(db);
-  console.time("calculateStatisticsTotal");
 
-  // now lookup with filters, either in db or programmatically
-  const filteredData = lookUp(data, filters);
+  const filtersAreApplied = !!(
+    filters?.month ??
+    filters?.ageRange ??
+    filters?.type
+  );
+  console.log("are filters applied", filtersAreApplied);
 
-  const allData = getTotals(data);
-  console.timeEnd("calculateStatisticsTotal");
-
+  // must always return one document, either the unfiltered one with all of the records showing
+  // or another record filtered to a single filter or a combination of filters
   return {
-    allData,
-    data,
+    statistics: filtersAreApplied
+      ? getTotals(lookUp(data, filters))
+      : getTotals(data),
     stale,
     lastUpdated,
   };
@@ -104,8 +106,8 @@ function calculateStatistics(data: StopSearchData[]) {
   console.time("calculateStatistics");
   // create sets to collect all possible filters
   const uniqueMonths = new Set<string>();
-  const uniqueAgeGroups = new Set<Data["ageRange"]>();
-  const uniqueTypes = new Set<Data["type"]>();
+  const uniqueAgeGroups = new Set<StopSearchData["ageRange"]>();
+  const uniqueTypes = new Set<StopSearchData["type"]>();
 
   for (const item of data) {
     uniqueMonths.add(item.datetime.slice(0, 7));
@@ -129,7 +131,7 @@ function calculateStatistics(data: StopSearchData[]) {
         // try to find an item in testData where the month, ageGroup and type are the same
 
         // todo: get rid of filter func
-        const matchedItems = testData.filter((item) => {
+        const matchedItems = data.filter((item) => {
           if (
             item.datetime.includes(month) &&
             item.ageRange === ageGroup &&
@@ -175,7 +177,7 @@ function lookUp(data: StatisticDocument[], filters: FilterParams) {
       return item;
     }
     return false;
-  }) as FilteredStatistic[];
+  });
 
   console.timeEnd("filterStatistics");
   return filtered;
