@@ -98,9 +98,7 @@ async function getData(filters: FilterParams) {
   // must always return one document, either the unfiltered one with all of the records showing
   // or another record filtered to a single filter or a combination of filters
   return {
-    statistics: filtersAreApplied
-      ? getTotals(lookUp(data, filters))
-      : getTotals(data),
+    statistics: getTotals(filtersAreApplied ? lookUp(data, filters) : data),
     stale,
     lastUpdated,
   };
@@ -182,14 +180,10 @@ function lookUp(data: StatisticDocument[], filters: FilterParams) {
   console.time("filterStatistics");
 
   const filtered = data.filter((item) => {
-    if (
-      item.month === filters.month &&
-      item.ageRange === filters.ageRange &&
-      item.type === filters.type
-    ) {
-      return item;
-    }
-    return false;
+    if (filters?.month && item.month !== filters.month) return false;
+    if (filters?.ageRange && item.ageRange !== filters.ageRange) return false;
+    if (filters?.type && item.type !== filters.type) return false;
+    return true;
   });
 
   console.timeEnd("filterStatistics");
