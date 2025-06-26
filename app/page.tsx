@@ -1,4 +1,4 @@
-import DonutChartWithText from "@/components/DonutChartWithText";
+import GenderPieChart from "@/components/GenderPieChart";
 import HorizontalBarChart from "@/components/HorizontalBarChart";
 import InfoCard from "@/components/InfoCard";
 import PanelGrid from "@/components/PanelGrid";
@@ -25,7 +25,7 @@ export default async function Home() {
 
                 <section className="w-full flex flex-col xl:flex-row gap-4">
                     <HorizontalBarChart />
-                    <DonutChartWithText />
+                    <GenderPieChart />
                     <RadarChart />
                 </section>
 
