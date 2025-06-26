@@ -12,6 +12,9 @@ export type StopSearchStatistics = {
   mostSearchedGender?: string | null;
   mostSearchedGenderValue?: number;
   objectsOfSearch: Map<string, number> | Record<string, any>;
+  outcomes: Map<string, number> | Record<string, any>;
+  mostSearchedOutcome?: string | null;
+  mostSearchedOutcomeValue?: number;
 };
 
 // this is 1 statistic with its combination of filters, we could have hundreds like this

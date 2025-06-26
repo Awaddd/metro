@@ -142,11 +142,13 @@ function calculateStatistics(data: StopSearchData[]) {
         const uniqueDays = new Set();
         const uniqueGenders = new Set();
         const uniqueObjects = new Set();
+        const uniqueOutcomes = new Set();
 
         let arrestCount = 0;
         const ages = new Map<string, number>();
         const genders = new Map<string, number>();
         const objectsOfSearch = new Map<string, number>();
+        const outcomes = new Map<string, number>();
 
         // do all calculations in one loop as we are going through a huge number of records
         // so inefficient to calculate separately
@@ -166,6 +168,7 @@ function calculateStatistics(data: StopSearchData[]) {
           uniqueDays.add(item.datetime.slice(0, 10));
           uniqueGenders.add(item.gender);
           uniqueObjects.add(item.objectOfSearch);
+          uniqueOutcomes.add(item.outcome);
 
           if (item.outcome?.toLowerCase() === "arrest") {
             arrestCount += 1;
@@ -185,6 +188,9 @@ function calculateStatistics(data: StopSearchData[]) {
             objectKey,
             (objectsOfSearch.get(objectKey) ?? 0) + 1
           );
+
+          const outcomeKey = item.outcome == null ? "null" : item.outcome;
+          outcomes.set(outcomeKey, (genders.get(outcomeKey) ?? 0) + 1);
         }
 
         const totalSearches = matchedItems.length;
@@ -197,11 +203,12 @@ function calculateStatistics(data: StopSearchData[]) {
           month: month,
           ageRange: ageGroup,
           type: type,
-          totalSearches,
+          totalSearches: totalSearches,
           arrests: arrestCount,
           daysWithData: uniqueDays.size,
           genders: genders,
           objectsOfSearch: objectsOfSearch,
+          outcomes: outcomes,
         };
 
         statistics.push(statistic);
@@ -230,6 +237,8 @@ function lookUp(data: StatisticDocument[], filters: FilterParams) {
 function getTotals(data: StatisticDocument[]): FilteredStatistic {
   const genders = new Map<string, number>();
   const objectsOfSearch = new Map<string, number>();
+  const outcomes = new Map<string, number>();
+
   const totals = data.reduce(
     (previous, next) => {
       if (next.genders) {
@@ -241,6 +250,12 @@ function getTotals(data: StatisticDocument[]): FilteredStatistic {
       if (next.objectsOfSearch) {
         for (const [key, count] of Object.entries(next.objectsOfSearch)) {
           objectsOfSearch.set(key, (objectsOfSearch.get(key) ?? 0) + count);
+        }
+      }
+
+      if (next.outcomes) {
+        for (const [key, count] of Object.entries(next.outcomes)) {
+          outcomes.set(key, (outcomes.get(key) ?? 0) + count);
         }
       }
 
@@ -260,6 +275,9 @@ function getTotals(data: StatisticDocument[]): FilteredStatistic {
   const { mostSearched: mostSearchedGender, value: mostSearchedGenderValue } =
     getMostSearchedItem(genders);
 
+  const { mostSearched: mostSearchedOutcome, value: mostSearchedOutcomeValue } =
+    getMostSearchedItem(outcomes);
+
   return {
     month: null,
     ageRange: null,
@@ -270,6 +288,9 @@ function getTotals(data: StatisticDocument[]): FilteredStatistic {
     genders: Object.fromEntries(genders),
     mostSearchedGender,
     mostSearchedGenderValue,
+    outcomes: Object.fromEntries(outcomes),
+    mostSearchedOutcome,
+    mostSearchedOutcomeValue,
     ...totals,
   };
 }
