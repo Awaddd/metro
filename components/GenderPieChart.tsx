@@ -64,10 +64,6 @@ export default function () {
         }
     }, [data?.statistics.genders])
 
-    if (!chartConfig || !chartData) {
-        return null
-    }
-
     return (
         <Card className="flex flex-col w-full">
             <CardHeader className="items-center pb-0">
@@ -76,7 +72,7 @@ export default function () {
             </CardHeader>
             <CardContent className="flex-1 pb-0">
                 <ChartContainer
-                    config={chartConfig}
+                    config={chartConfig ?? {}}
                     className="mx-auto aspect-square max-h-[250px]"
                 >
                     <PieChart>

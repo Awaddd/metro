@@ -21,23 +21,19 @@ import {
 export const description = "A radar chart with lines only"
 
 const chartData = [
-    { month: "January", desktop: 186, mobile: 160 },
-    { month: "February", desktop: 185, mobile: 170 },
-    { month: "March", desktop: 207, mobile: 180 },
-    { month: "April", desktop: 173, mobile: 160 },
-    { month: "May", desktop: 160, mobile: 190 },
-    { month: "June", desktop: 174, mobile: 204 },
+    { month: "Under 10", value: 186 },
+    { month: "February", value: 185 },
+    { month: "March", value: 207 },
+    { month: "April", value: 173 },
+    { month: "May", value: 160 },
+    { month: "Over 30", value: 174 },
 ]
 
 const chartConfig = {
-    desktop: {
-        label: "Desktop",
+    value: {
+        label: "Value",
         color: "var(--chart-1)",
-    },
-    mobile: {
-        label: "Mobile",
-        color: "var(--chart-2)",
-    },
+    }
 } satisfies ChartConfig
 
 export default function () {
@@ -52,7 +48,7 @@ export default function () {
             <CardContent className="pb-0">
                 <ChartContainer
                     config={chartConfig}
-                    className="mx-auto aspect-square max-h-[250px]"
+                    className="mx-auto aspect-square max-h-[250px] w-full"
                 >
                     <RadarChart data={chartData}>
                         <ChartTooltip
@@ -62,17 +58,10 @@ export default function () {
                         <PolarAngleAxis dataKey="month" />
                         <PolarGrid radialLines={false} />
                         <Radar
-                            dataKey="desktop"
-                            fill="var(--color-desktop)"
+                            dataKey="value"
+                            fill="var(--color-value)"
                             fillOpacity={0}
-                            stroke="var(--color-desktop)"
-                            strokeWidth={2}
-                        />
-                        <Radar
-                            dataKey="mobile"
-                            fill="var(--color-mobile)"
-                            fillOpacity={0}
-                            stroke="var(--color-mobile)"
+                            stroke="var(--color-value)"
                             strokeWidth={2}
                         />
                     </RadarChart>
