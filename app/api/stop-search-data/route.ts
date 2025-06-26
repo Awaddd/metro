@@ -96,10 +96,12 @@ async function getData(filters: FilterParams) {
 }
 
 async function fetchAndPersist(db: Db) {
+  console.time("overallFetchAndPersistComputedStatistics");
   const freshData = await fetchStopSearchData();
   const transformed = freshData.map(transformData);
   const statistics = calculateStatistics(transformed);
   await persist(db, statistics);
+  console.timeEnd("overallFetchAndPersistComputedStatistics");
 }
 
 function calculateStatistics(data: StopSearchData[]) {

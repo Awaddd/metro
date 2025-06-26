@@ -9,7 +9,10 @@ export async function fetchStopSearchData(
   const availableDates = await getAvailableDates();
 
   // temp limit all data to just 7 months
-  return await batchFetchData(availableDates.slice(0, 7), 10);
+  console.time("fetchSevenRecords");
+  const data = await batchFetchData(availableDates.slice(0, 7), 10);
+  console.timeEnd("fetchSevenRecords");
+  return data;
 }
 
 async function batchFetchData(dates: string[], size: number) {
