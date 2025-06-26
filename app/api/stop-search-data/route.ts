@@ -84,6 +84,8 @@ async function getData(filters: FilterParams) {
   const data = await loadFromCache(db);
 
   // fix this logic, this is always true
+  console.log("filters", filters);
+
   const filtersAreApplied = !!(
     filters?.month ||
     filters?.ageRange ||
@@ -96,7 +98,9 @@ async function getData(filters: FilterParams) {
   // must always return one document, either the unfiltered one with all of the records showing
   // or another record filtered to a single filter or a combination of filters
   return {
-    statistics: getTotals(data),
+    statistics: filtersAreApplied
+      ? getTotals(lookUp(data, filters))
+      : getTotals(data),
     stale,
     lastUpdated,
   };

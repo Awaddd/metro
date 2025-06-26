@@ -7,12 +7,27 @@ type ReturnType = {
   stale: boolean;
 };
 
-export default async function (date?: string): Promise<ReturnType | undefined> {
+export default async function (
+  date?: string,
+  ageRange?: string,
+  type?: string
+): Promise<ReturnType | undefined> {
   console.log(`getting data for date (${date ? date : "ALL"})`);
-  // todo: pass in other filters
-  const url = `${baseUrl}/api/stop-search-data?date=${date}`;
+  const url = new URL("/api/stop-search-data", baseUrl);
+
+  if (date) {
+    url.searchParams.set("date", date);
+  }
+
+  if (ageRange) {
+    url.searchParams.set("ageRange", ageRange);
+  }
+
+  if (type) {
+    url.searchParams.set("type", type);
+  }
   try {
-    const response = await fetch(url);
+    const response = await fetch(url.toString());
     return await response.json();
   } catch (error) {
     console.error(error);
