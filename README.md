@@ -31,3 +31,17 @@ In most cases I’d self-host and use Docker, writing the aggregated data to a j
 ## What would I have done differently if I had time
 
 I would have wrapped some of my mongo calls in transactions to ensure data is added or removed together in unison if all operations succeed.
+
+## Notes
+
+Current caching strategy is not working. It results in a slow ingestion and slow reads.
+
+An alternative strategy is to only cache pre-computed statistics i.e. all of the statistics I plan to show, instead of all of the documents.
+
+The problem with this is applying filters, at most I would only be able to apply the date filter if I stored the pre-computed statistics on a month by month basis and simply showed the aggregated results aka "all data" when the user first loads the app, and then individual months when a user selects a month.
+
+Another idea I had was to simply reduce the payload size of the stored objects when storing all objects i.e. cut down from all properties to just the few that would be used in calculations. However I was experiencing slow loads when only working with 7 months worth of data. So even if we were to reduce the size of objects stored, if we went back to fetching all records (28 months, aka 4 times more), it would completely negate the effect of reducing the size of objects and lead to the same result of slow loading.
+
+It's important that we move any slowness to when we initially write data to the cache, and that we offload that write from the end user. Initially I wanted to do a fire and forget but it might just be simpler to do a cron job. My concerns with doing a cron was that it would be difficult to deploy and would require its own infrastructure separate from the main app, but that tradeoff might be worth it now to ensure we get a great user experience without overcomplicating the app.
+
+Back to the pre-compute strategy, one solution to fix the filter problem is to store all of the possible combinations of filters on the data. i.e. assuming we selected the following filters of month, age range and type (person search etc), we would have around 500 unique combinations as opposed to the hundreds of thousands of raw data we were storing before. Currently we have about 28 months of metropolitan police data, 6 age ranges including null and 3 types of search. 28 x 6 x 3 = 504
