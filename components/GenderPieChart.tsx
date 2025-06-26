@@ -68,7 +68,7 @@ export default function () {
         <Card className="flex flex-col w-full">
             <CardHeader className="items-center pb-0">
                 <CardTitle>Genders</CardTitle>
-                <CardDescription>This chart shows the gender distribution for the metropolitan police stop and search data</CardDescription>
+                <CardDescription>This chart shows the gender distribution for the Metropolitan Police Force</CardDescription>
             </CardHeader>
             <CardContent className="flex-1 pb-0">
                 <ChartContainer
@@ -126,7 +126,7 @@ export default function () {
                     {data?.statistics.mostSearchedGender} makes up 70% of the diagram <TrendingUp className="h-4 w-4" />
                 </div>
                 <div className="text-muted-foreground leading-none">
-                    Showing genders for the filtered data set
+                    Showing genders for the data set
                 </div>
             </CardFooter>
         </Card>

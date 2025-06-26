@@ -26,8 +26,8 @@ export default async function Home() {
 
                 <section className="w-full flex flex-col xl:flex-row gap-4">
                     <HorizontalBarChart />
-                    <GenderPieChart />
                     <RadialChart />
+                    <GenderPieChart />
                 </section>
 
                 <section className="w-full flex flex-grow flex-col xl:flex-row gap-4">

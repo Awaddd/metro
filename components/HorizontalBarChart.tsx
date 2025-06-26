@@ -24,8 +24,6 @@ import { capitaliseFirstLetter } from "@/lib/helpers"
 export default function () {
     const { data } = useSearch()
 
-    console.log("objects", data?.statistics.objectsOfSearch)
-
     const { chartConfig, chartData } = useMemo(() => {
         if (!data?.statistics.objectsOfSearch) {
             return {}
@@ -68,7 +66,7 @@ export default function () {
         <Card className="w-full">
             <CardHeader>
                 <CardTitle>Object of search</CardTitle>
-                <CardDescription>This chart shows the object of search distribution for the metropolitan police stop and search data</CardDescription>
+                <CardDescription>This chart shows the object of search distribution for the Metropolitan Police Force</CardDescription>
             </CardHeader>
             <CardContent className="w-full h-full">
                 <ChartContainer config={chartConfig ?? {}} className="h-full w-full">

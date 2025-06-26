@@ -278,13 +278,26 @@ function getTotals(data: StatisticDocument[]): FilteredStatistic {
   const { mostSearched: mostSearchedOutcome, value: mostSearchedOutcomeValue } =
     getMostSearchedItem(outcomes);
 
+  const { mostSearched: mostSearchedObject, value: mostSearchedObjectValue } =
+    getMostSearchedItem(objectsOfSearch);
+
+  const searchObjects = Object.fromEntries(objectsOfSearch);
+
+  const totalSearchedObjects = Object.values(searchObjects).reduce(
+    (prev, next) => prev + next,
+    0
+  );
+
   return {
     month: null,
     ageRange: null,
     type: null,
     arrestRate: (totals.arrests / totals.totalSearches) * 100,
     averagePerDay: totals.totalSearches / totals.daysWithData,
-    objectsOfSearch: Object.fromEntries(objectsOfSearch),
+    objectsOfSearch: searchObjects,
+    mostSearchedObject,
+    mostSearchedObjectValue,
+    totalSearchedObjects,
     genders: Object.fromEntries(genders),
     mostSearchedGender,
     mostSearchedGenderValue,
