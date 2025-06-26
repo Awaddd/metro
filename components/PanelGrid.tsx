@@ -9,39 +9,15 @@ import { getQueryKey } from "@/lib/get-query-key";
 import getStopSearchData from "@/queries/get-stop-search-data";
 import { FilterParams } from "@/types/stats";
 import { useMemo } from "react";
+import { useSearch } from "@/hooks/use-search";
 
 export default function () {
-    const { date, type, ageRange } = useCtx()
-
-    const filters = useMemo(() => {
-        const result: FilterParams = {}
-
-        if (date) {
-            result.month = date ? format(date, 'yyyy-MM') : date
-        }
-
-        if (ageRange) {
-            result.ageRange = ageRange
-        }
-
-        if (type) {
-            result.type = type
-        }
-
-        return result
-    }, [date, type, ageRange])
-
-    const { data } = useQuery({
-        queryKey: getQueryKey(filters),
-        queryFn: () => getStopSearchData(filters)
-    })
+    const { data } = useSearch()
 
     console.log("data", data)
 
-
     const averagePerDay = Math.round((data?.statistics?.averagePerDay ?? 0) * 10) / 10
     const arrestRate = Math.round((data?.statistics?.arrestRate ?? 0) * 10) / 10
-
 
     return (
         <>
