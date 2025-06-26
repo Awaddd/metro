@@ -1,9 +1,11 @@
-import DatePicker from "@/components/DatePicker/DatePicker";
+import DatePicker from "@/components/Filters/DatePicker";
 import { Separator } from "@/components/ui/separator";
 import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import SelectedDate from "./SelectedDate";
 import getAvailableDates from "@/queries/get-available-dates";
 import { getQueryClient } from "@/app/get-query-client";
+import AgeRange from "../Filters/AgeRange";
+import Type from "../Filters/Type";
 
 export default async function () {
     const queryClient = getQueryClient()
@@ -24,8 +26,10 @@ export default async function () {
                     <h2 className="px-2">Overview</h2>
                     <SelectedDate />
                 </div>
-                <div className="lg:pr-2 xl:pr-8 flex justify-center">
+                <div className="lg:pr-2 xl:pr-8 flex flex-col lg:flex-row items-center justify-center gap-2">
                     <DatePicker />
+                    <AgeRange />
+                    <Type />
                 </div>
             </header>
         </SidebarInset>

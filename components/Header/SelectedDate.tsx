@@ -31,7 +31,7 @@ export default function () {
     }
 
     return (
-        <>
+        <div className="flex flex-col w-full lg:hidden xl:flex xl:flex-row items-center xl:justify-start text-center gap-2">
             <Separator
                 orientation="vertical"
                 className="data-[orientation=vertical]:h-4 bg-gray-900/50"
@@ -43,6 +43,6 @@ export default function () {
                     <span className="py-1 px-2.5 ml-3 bg-primary/20 text-primary rounded-lg text-sm font-black">Latest</span>
                 )}
             </div>
-        </>
+        </div>
     )
 }

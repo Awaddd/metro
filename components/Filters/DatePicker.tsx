@@ -20,7 +20,7 @@ export default function () {
     return (
         <Popover>
             <PopoverTrigger asChild>
-                <Button variant={"outline"} className={cn("w-[280px] justify-start text-left font-normal rounded-xl", !date && "text-muted-foreground")}>
+                <Button variant={"outline"} className={cn("w-[180px] justify-start text-left font-normal rounded-sm bg-muted cursor-default hover:bg-muted", !date && "text-muted-foreground")}>
                     <CalendarIcon className="mr-2 h-4 w-4" />
                     {date ? format(date, "MMM yyyy") : <span>Pick a month</span>}
                 </Button>
