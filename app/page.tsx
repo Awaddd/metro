@@ -13,7 +13,7 @@ export default async function Home() {
 
     await queryClient.prefetchQuery({
         queryKey: getQueryKey(),
-        queryFn: () => getStopSearchData()
+        queryFn: () => getStopSearchData({})
     })
 
     return (
