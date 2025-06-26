@@ -114,6 +114,7 @@ async function fetchAndPersist(db: Db) {
 
 function calculateStatistics(data: StopSearchData[]) {
   console.time("calculateStatistics");
+
   // create sets to collect all possible filters
   const uniqueMonths = new Set<string>();
   const uniqueAgeGroups = new Set<StopSearchData["ageRange"]>();
@@ -125,32 +126,25 @@ function calculateStatistics(data: StopSearchData[]) {
     uniqueTypes.add(item.type);
   }
 
-  console.log("unique months", uniqueMonths);
-  console.log("unique age groups", uniqueAgeGroups);
-  console.log("unique types", uniqueTypes);
-  console.log(
-    "total num of combinations",
-    uniqueMonths.size * uniqueAgeGroups.size * uniqueTypes.size
-  );
-
   const statistics: StatisticDocument[] = [];
 
+  // precompute statistics for each filter combination
   for (const month of uniqueMonths) {
     for (const ageGroup of uniqueAgeGroups) {
       for (const type of uniqueTypes) {
         // try to find an item in testData where the month, ageGroup and type are the same
 
-        // todo: get rid of filter func
-        const matchedItems = data.filter((item) => {
+        const matchedItems = [];
+
+        for (const item of data) {
           if (
             item.datetime.includes(month) &&
             item.ageRange === ageGroup &&
             item.type === type
           ) {
-            return true;
+            matchedItems.push(item);
           }
-          return false;
-        });
+        }
 
         if (matchedItems.length === 0) {
           continue;
