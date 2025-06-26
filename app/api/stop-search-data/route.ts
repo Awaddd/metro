@@ -86,6 +86,8 @@ async function getData(filters: StopSearchFilters) {
     console.log("stale, has data... fetching data in background");
     // return stale data in the mean time, trigger a fetch to happen in the background
     runInBackground(() => fetchAndPersist(db));
+    // need a mechanism to change the stale property returned when this is completed
+    // so the frontend knows to show new data and stop showing "showing stale data, fetching in the background"
   } else if (stale && !hasData) {
     // fetch new data and force user to wait (rare edgecase, we most probably always will have stale data)
     console.log("stale, no data... fetching data and waiting");

@@ -82,6 +82,11 @@ export async function persist(db: Db, docs: StopSearchData[]) {
 
   let updated = false;
 
+  // do nothing if no data
+  if (!docs || docs.length === 0) {
+    return updated;
+  }
+
   try {
     const result = await dataCollection.deleteMany({});
     console.log(`Deleted ${result.deletedCount} record(s)`);
@@ -103,6 +108,7 @@ export async function persist(db: Db, docs: StopSearchData[]) {
   }
 
   if (!updated) {
+    // should be setting hasData to false if the insert above failed
     return false;
   }
 
@@ -113,6 +119,7 @@ export async function persist(db: Db, docs: StopSearchData[]) {
       hasData: true,
     };
 
+    // need to add unique id
     const result = await meta.updateOne({}, { $set: doc }, { upsert: true });
 
     console.log("updated meta with", result.upsertedId);
