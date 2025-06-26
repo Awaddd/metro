@@ -9,6 +9,7 @@ type ReturnType = {
 
 export default async function (date?: string): Promise<ReturnType | undefined> {
   console.log(`getting data for date (${date ? date : "ALL"})`);
+  // todo: pass in other filters
   const url = `${baseUrl}/api/stop-search-data?date=${date}`;
   try {
     const response = await fetch(url);

@@ -11,6 +11,7 @@ import getStopSearchData from "@/queries/get-stop-search-data";
 export default function () {
     const date = useCtx(state => state.date ? format(state.date, 'yyyy-MM') : state.date)
 
+    // todo: pass in other filters
     const { data } = useQuery({
         queryKey: getQueryKey(date),
         queryFn: () => getStopSearchData(date)

@@ -23,18 +23,22 @@ import { NextResponse } from "next/server";
 export async function GET(request: Request) {
   const url = new URL(request.url);
 
-  // get date filter if present
+  // get filters if present
   const month = url.searchParams.get("date");
   const ageParam = url.searchParams.get("age");
   const typeParam = url.searchParams.get("type");
 
-  const ageRange = (
-    ALLOWED_AGE_RANGES.includes(ageParam) ? ageParam : null
-  ) as FilterParams["ageRange"];
+  // would be better to show an error if the filter is invalid otherwise ainaccurate results will be shown
+  // users would not be able to pass in an invalid filter now anyway
+  // as we will show them fixed values they can select from
+  // but its better to be safe in case things are changed in the future
+  const ageRange = ALLOWED_AGE_RANGES.includes(ageParam)
+    ? (ageParam as FilterParams["ageRange"])
+    : null;
 
-  const type = (
-    ALLOWED_TYPES.includes(typeParam ?? "") ? typeParam : null
-  ) as FilterParams["type"];
+  const type = ALLOWED_TYPES.includes(typeParam ?? "")
+    ? (typeParam as FilterParams["type"])
+    : null;
 
   try {
     const { statistics, stale, lastUpdated } = await getData({
@@ -61,6 +65,7 @@ async function getData(filters: FilterParams) {
 
   const { stale, hasData, lastUpdated } = await validateCache(db);
 
+  // todo: improve the fetch in background mechanism and UX or replace with cron job
   if (stale && hasData) {
     console.log("stale, has data... fetching data in background");
     // return stale data in the mean time, trigger a fetch to happen in the background
