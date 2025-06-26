@@ -7,6 +7,7 @@ import { getQueryClient } from "./get-query-client";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { getQueryKey } from "@/lib/get-query-key";
 import getStopSearchData from "@/queries/get-stop-search-data";
+import RadialChart from "@/components/RadialChart";
 
 export default async function Home() {
     const queryClient = getQueryClient()
@@ -26,7 +27,7 @@ export default async function Home() {
                 <section className="w-full flex flex-col xl:flex-row gap-4">
                     <HorizontalBarChart />
                     <GenderPieChart />
-                    <RadarChart />
+                    <RadialChart />
                 </section>
 
                 <section className="w-full flex flex-grow flex-col xl:flex-row gap-4">
