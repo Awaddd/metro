@@ -3,6 +3,7 @@ import { StatisticDocument } from "@/types/stats";
 import { Db } from "mongodb";
 
 type MetaDocument = {
+  _id: string;
   lastUpdated: Date | null;
   hasData: boolean;
 };
@@ -74,7 +75,7 @@ export async function loadFromCache(db: Db) {
 
 export async function persist(db: Db, docs: StatisticDocument[]) {
   const dataCollection = db.collection<StatisticDocument>(DATA_COLLECTION);
-  const meta = db.collection(META_COLLECTION);
+  const meta = db.collection<MetaDocument>(META_COLLECTION);
 
   let updated = false;
 
@@ -105,13 +106,18 @@ export async function persist(db: Db, docs: StatisticDocument[]) {
 
   // update last updated if successfully stored fresh data
   try {
+    const id = "stop-and-search-cache";
     const doc = {
+      _id: id,
       lastUpdated: new Date(),
       hasData: true,
     };
 
-    // need to add unique id
-    const result = await meta.updateOne({}, { $set: doc }, { upsert: true });
+    const result = await meta.updateOne(
+      { _id: id },
+      { $set: doc },
+      { upsert: true }
+    );
 
     console.log("updated meta with", result.upsertedId);
     return true;
