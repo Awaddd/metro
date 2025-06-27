@@ -10,10 +10,6 @@ type ReturnType = {
 export default async function (
   filters: FilterParams
 ): Promise<ReturnType | undefined> {
-  console.log(
-    `getting data for month (${filters.month ? filters.month : "ALL"})`
-  );
-
   const url = new URL("/api/stop-search-data", baseUrl);
 
   if (filters.month) {

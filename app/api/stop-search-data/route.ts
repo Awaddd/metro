@@ -83,9 +83,6 @@ async function getData(filters: FilterParams) {
 
   const data = await loadFromCache(db);
 
-  // fix this logic, this is always true
-  console.log("filters", filters);
-
   const filtersAreApplied = !!(
     filters?.month ||
     filters?.ageRange ||

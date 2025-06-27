@@ -1,17 +1,14 @@
 import getAvailableDates from "@/queries/get-available-dates";
 import { StopSearchResponse } from "@/types/stop-search";
 
-// todo: filters
-export async function fetchStopSearchData(
-  date?: string
-): Promise<StopSearchResponse[]> {
+export async function fetchStopSearchData(): Promise<StopSearchResponse[]> {
   console.log("*** fetching fresh data ***");
   const availableDates = await getAvailableDates();
 
   // temp limit all data to just 7 months
-  console.time("fetchSevenRecords");
+  console.time("fetchRecordsFromApi");
   const data = await batchFetchData(availableDates.slice(0, 7), 10);
-  console.timeEnd("fetchSevenRecords");
+  console.timeEnd("fetchRecordsFromApi");
   return data;
 }
 
