@@ -19,22 +19,28 @@ export default async function Home() {
 
     return (
         <HydrationBoundary state={dehydrate(queryClient)}>
-            <div className="min-h-full flex flex-grow flex-col gap-4 xl:grid xl:grid-rows-[max-content_1fr_max-content] items-start xl:gap-2.5 p-4">
-                <section className="w-full grid lg:grid-cols-2 xl:grid-cols-4 gap-4">
-                    <PanelGrid />
-                </section>
-
-                <section className="w-full flex flex-col flex-grow gap-4">
-                    <div className="flex flex-col xl:grid xl:grid-cols-[1fr_1fr_1fr] gap-4 w-full">
-                        <HorizontalBarChart />
-                        <RadialChart />
-                        <GenderPieChart />
-                    </div>
-                </section>
-
-                <section className="w-full flex flex-col xl:flex-row gap-4">
-                    <InfoCard />
-                </section>
+            <div className="h-full flex flex-grow flex-col gap-4 items-start">
+                <div className="flex flex-col h-full w-full xl:gap-2.5 p-4">
+                    <section className="w-full h-full flex flex-1 gap-2">
+                        <PanelGrid />
+                    </section>
+                    <section className="w-full h-full flex flex-1">
+                        <div className="h-full 2xl:grid 2xl:grid-cols-[10fr_7fr_7fr] gap-2 w-full">
+                            <section>
+                                <HorizontalBarChart />
+                            </section>
+                            <section className="h-full">
+                                <RadialChart />
+                            </section>
+                            <section className="h-full">
+                                <GenderPieChart />
+                            </section>
+                        </div>
+                    </section>
+                    <section className="w-full flex flex-shrink">
+                        <InfoCard />
+                    </section>
+                </div>
             </div>
         </HydrationBoundary>
     );

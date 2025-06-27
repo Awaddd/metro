@@ -63,7 +63,7 @@ export default function () {
     }, [data?.statistics.objectsOfSearch])
 
     return (
-        <Card className="w-full h-full">
+        <Card className="w-full min-h-[360px]">
             <CardHeader>
                 <CardTitle>Object of search</CardTitle>
                 <CardDescription>This chart shows the object of search distribution for the Metropolitan Police Force</CardDescription>

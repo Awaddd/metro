@@ -68,7 +68,7 @@ export default function () {
     }, [data?.statistics])
 
     return (
-        <Card className="relative flex flex-col w-full">
+        <Card className="relative flex flex-col h-full w-full">
             <CardHeader className="items-center pb-0">
                 <CardTitle>Genders</CardTitle>
                 <CardDescription>This chart shows the gender distribution for the Metropolitan Police Force</CardDescription>
@@ -123,7 +123,7 @@ export default function () {
                         </Pie>
                     </PieChart>
                 </ChartContainer>
-                <div className="xl:absolute xl:bottom-7 xl:left-0 w-full flex flex-col items-center gap-2 text-sm">
+                <div className="2xl:absolute 2xl:bottom-7 2xl:left-0 w-full flex flex-col items-center gap-2 text-sm">
                     {percentage && (
                         <div className="flex items-center gap-2 leading-none font-medium">
                             {data?.statistics.mostSearchedGender} makes up {percentage?.toFixed(0)}% of all searches
