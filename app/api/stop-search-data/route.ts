@@ -84,12 +84,14 @@ async function getData(filters: FilterParams) {
   // for now, in the absolute edge case that there is no data in cache and the cron failed
   // we will fetch new data and make the user wait for it
   // even if the cron job and mongo cache is reliable, we need this fallback
-  if (stale) {
-    console.log("stale, no data... fetching data and waiting");
-    await fetchAndPersist(db);
-  } else {
-    console.log("fresh cached data is available, loading from cache...");
-  }
+
+  //   temporarily disable write to fetch and persist
+  //   if (stale) {
+  //     console.log("stale, no data... fetching data and waiting");
+  //     await fetchAndPersist(db);
+  //   } else {
+  //     console.log("fresh cached data is available, loading from cache...");
+  //   }
 
   const data = await loadFromCache(db);
 
