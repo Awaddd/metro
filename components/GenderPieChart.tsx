@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { TrendingUp } from "lucide-react"
+import { Rocket, TrendingDown, TrendingUp } from "lucide-react"
 import { Label, Pie, PieChart } from "recharts"
 
 import {
@@ -24,8 +24,8 @@ import { useMemo } from "react"
 export default function () {
     const { data } = useSearch()
 
-    const { chartConfig, chartData } = useMemo(() => {
-        if (!data?.statistics.genders) {
+    const { chartConfig, chartData, percentage } = useMemo(() => {
+        if (!data?.statistics.genders || !data?.statistics.mostSearchedGenderValue) {
             return {}
         }
 
@@ -58,9 +58,12 @@ export default function () {
             }
         }
 
+        const percentage = (data.statistics.mostSearchedGenderValue / data.statistics.totalSearches) * 100
+
         return {
             chartData,
-            chartConfig
+            chartConfig,
+            percentage
         }
     }, [data?.statistics.genders])
 
@@ -121,10 +124,14 @@ export default function () {
                 </ChartContainer>
             </CardContent>
             <CardFooter className="flex-col gap-2 text-sm">
-                <div className="flex items-center gap-2 leading-none font-medium">
-                    {/* todo: dont hard code this */}
-                    {data?.statistics.mostSearchedGender} makes up 70% of the diagram <TrendingUp className="h-4 w-4" />
-                </div>
+                {percentage && (
+                    <div className="flex items-center gap-2 leading-none font-medium">
+                        {data?.statistics.mostSearchedGender} makes up {percentage?.toFixed(0)}% of all searches
+                        {percentage > 50 && (
+                            <TrendingUp className="h-4 w-4" />
+                        )}
+                    </div>
+                )}
                 <div className="text-muted-foreground leading-none">
                     Showing genders for the data set
                 </div>

@@ -12,7 +12,6 @@ export type StopSearchStatistics = {
   mostSearchedGender?: string | null;
   mostSearchedGenderValue?: number;
   objectsOfSearch: Map<string, number> | Record<string, any>;
-  totalSearchedObjects?: number;
   mostSearchedObject?: string | null;
   mostSearchedObjectValue?: number;
   outcomes: Map<string, number> | Record<string, any>;

@@ -28,7 +28,7 @@ export default function () {
     const { data } = useSearch()
 
     const { chartConfig, chartData, percentage, mostSearchedObject } = useMemo(() => {
-        if (!data?.statistics.mostSearchedObject || !data?.statistics.mostSearchedObjectValue || !data?.statistics.totalSearchedObjects) {
+        if (!data?.statistics.mostSearchedObject || !data?.statistics.mostSearchedObjectValue || !data?.statistics.totalSearches) {
             return {}
         }
 
@@ -44,7 +44,7 @@ export default function () {
             }
         }
 
-        const percentage = (data.statistics.mostSearchedObjectValue / data.statistics.totalSearchedObjects) * 100
+        const percentage = (data.statistics.mostSearchedObjectValue / data.statistics.totalSearches) * 100
 
         chartData.push({
             object: data.statistics.mostSearchedObject,
@@ -124,9 +124,14 @@ export default function () {
                 </ChartContainer>
             </CardContent>
             <CardFooter className="flex-col gap-2 text-sm">
-                <div className="flex items-center gap-2 leading-none font-medium">
-                    {percentage?.toFixed(0)}% of all searches were for {mostSearchedObject}
-                </div>
+                {percentage && (
+                    <div className="flex items-center gap-2 leading-none font-medium">
+                        {percentage?.toFixed(0)}% of all searches were for {mostSearchedObject.toLowerCase()}
+                        {percentage > 50 && (
+                            <TrendingUp className="h-4 w-4" />
+                        )}
+                    </div>
+                )}
                 <div className="text-muted-foreground leading-none">
                     Showing most common object of search for the data set
                 </div>

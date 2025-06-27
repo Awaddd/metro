@@ -70,53 +70,51 @@ export default function () {
             </CardHeader>
             <CardContent className="w-full h-full">
                 <ChartContainer config={chartConfig ?? {}} className="h-full w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                        <BarChart
-                            data={chartData}
-                            margin={{ left: 40, bottom: 80 }}
-                        >
-                            <CartesianGrid vertical={false} />
-                            <XAxis
-                                dataKey="object"
-                                tickLine={false}
-                                tickMargin={10}
-                                axisLine={false}
-                                tickFormatter={(value) => value.slice(0, 3)}
-                                tick={({ x, y, payload }) => {
-                                    const text = capitaliseFirstLetter(payload.value)
-                                    const truncated = text.split(" ")[0]
+                    <BarChart
+                        data={chartData}
+                        margin={{ left: 40, bottom: 80 }}
+                    >
+                        <CartesianGrid vertical={false} />
+                        <XAxis
+                            dataKey="object"
+                            tickLine={false}
+                            tickMargin={10}
+                            axisLine={false}
+                            tickFormatter={(value) => value.slice(0, 3)}
+                            tick={({ x, y, payload }) => {
+                                const text = capitaliseFirstLetter(payload.value)
+                                const truncated = text.split(" ")[0]
 
-                                    return (
-                                        <g transform={`translate(${x},${y})`}>
-                                            <text
-                                                transform="rotate(-55)"
-                                                textAnchor="end"
-                                                dominantBaseline="middle"
-                                                className="font-black text-black text-lg"
-                                                style={{
-                                                    userSelect: "none",
-                                                    fontWeight: 600,
-                                                    fontSize: 14,
-                                                    fill: "#333",
-                                                    fontFamily: "'Inter', sans-serif",
-                                                    letterSpacing: "0.03em",
-                                                }}
-                                            >
-                                                <title>{text}</title>
-                                                {truncated}
-                                            </text>
-                                        </g>
+                                return (
+                                    <g transform={`translate(${x},${y})`}>
+                                        <text
+                                            transform="rotate(-55)"
+                                            textAnchor="end"
+                                            dominantBaseline="middle"
+                                            className="font-black text-black text-lg"
+                                            style={{
+                                                userSelect: "none",
+                                                fontWeight: 600,
+                                                fontSize: 14,
+                                                fill: "#333",
+                                                fontFamily: "'Inter', sans-serif",
+                                                letterSpacing: "0.03em",
+                                            }}
+                                        >
+                                            <title>{text}</title>
+                                            {truncated}
+                                        </text>
+                                    </g>
 
-                                    )
-                                }}
-                            />
-                            <ChartTooltip
-                                cursor={false}
-                                content={<ChartTooltipContent hideLabel />}
-                            />
-                            <Bar dataKey="value" fill="var(--color-chart-3)" radius={8} />
-                        </BarChart>
-                    </ResponsiveContainer>
+                                )
+                            }}
+                        />
+                        <ChartTooltip
+                            cursor={false}
+                            content={<ChartTooltipContent hideLabel />}
+                        />
+                        <Bar dataKey="value" fill="var(--color-chart-3)" radius={8} />
+                    </BarChart>
                 </ChartContainer>
             </CardContent>
         </Card>
