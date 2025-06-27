@@ -23,7 +23,7 @@ export default function RootLayout({
                         <Sidebar />
                         <div className="w-full">
                             <Header />
-                            <div className="h-[calc(100vh-70px)] p-2">
+                            <div className="h-[calc(100vh-300px)] lg:h-[calc(100vh-70px)] p-2">
                                 <main className="h-full rounded-xl bg-background border overflow-auto">{children}</main>
                             </div>
                         </div>

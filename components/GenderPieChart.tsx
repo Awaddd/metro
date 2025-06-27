@@ -123,7 +123,7 @@ export default function () {
                         </Pie>
                     </PieChart>
                 </ChartContainer>
-                <div className="absolute bottom-7 left-0 w-full flex flex-col items-center gap-2 text-sm">
+                <div className="xl:absolute xl:bottom-7 xl:left-0 w-full flex flex-col items-center gap-2 text-sm">
                     {percentage && (
                         <div className="flex items-center gap-2 leading-none font-medium">
                             {data?.statistics.mostSearchedGender} makes up {percentage?.toFixed(0)}% of all searches

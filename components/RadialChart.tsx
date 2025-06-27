@@ -65,7 +65,7 @@ export default function () {
     }, [data?.statistics])
 
     return (
-        <Card className="relative flex flex-col w-full pb-0">
+        <Card className="relative flex flex-col w-full xl:pb-0">
             <CardHeader className="items-center pb-0">
                 <CardTitle>Most common searched object</CardTitle>
                 <CardDescription>This chart shows the most common searched object for the Metropolitan Police Force</CardDescription>
@@ -123,7 +123,7 @@ export default function () {
                         </PolarRadiusAxis>
                     </RadialBarChart>
                 </ChartContainer>
-                <div className="absolute bottom-7 left-0 w-full flex flex-col items-center gap-2 text-sm">
+                <div className="xl:absolute xl:bottom-7 xl:left-0 w-full flex flex-col items-center gap-2 text-sm">
                     {percentage && (
                         <div className="flex items-center gap-2 leading-none font-medium">
                             {percentage?.toFixed(0)}% of all searches were for {mostSearchedObject.toLowerCase()}
