@@ -12,9 +12,14 @@ import {
 import { useCtx } from "@/state"
 import { ALLOWED_TYPES, StopSearchData } from "@/types/stop-search"
 import ClearSelect from "../ClearSelect"
-import { useMemo } from "react"
+import { ReactNode, useMemo } from "react"
+import { cn } from "@/lib/utils"
 
-export default function () {
+type Props = {
+    className?: ReactNode
+}
+
+export default function ({ className }: Props) {
     const state = useCtx()
 
     const { type, updateType } = useMemo(() => ({
@@ -25,7 +30,7 @@ export default function () {
     return (
         // if time allows fix controlled uncontrolled complaint
         <Select value={type ?? ""} onValueChange={(value) => updateType(value as StopSearchData["type"])}>
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className={cn(className)}>
                 <SelectValue placeholder="Select a type" />
             </SelectTrigger>
             <SelectContent>

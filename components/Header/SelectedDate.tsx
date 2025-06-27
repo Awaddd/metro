@@ -5,10 +5,12 @@ import { useCtx } from "@/state"
 import { useQuery } from "@tanstack/react-query"
 import { format, parse } from "date-fns"
 import { Separator } from "../ui/separator"
+import { ReactNode } from "react"
+import { cn } from "@/lib/utils"
 
 const dateFormat = "MMM yyyy"
 
-export default function () {
+export default function ({ className }: { className?: ReactNode }) {
     const { data } = useQuery({
         queryKey: ["available-dates"],
         queryFn: getAvailableDates
@@ -31,10 +33,10 @@ export default function () {
     }
 
     return (
-        <div className="flex flex-col w-full lg:hidden xl:flex xl:flex-row items-center xl:justify-start text-center gap-2">
+        <div className={cn(className)}>
             <Separator
                 orientation="vertical"
-                className="data-[orientation=vertical]:h-4 bg-gray-900/50"
+                className="hidden xl:inline-block data-[orientation=vertical]:h-4 bg-gray-900/50"
             />
             <div className="px-2">
                 <span>Showing results for <span className="underline">{selectedDate}</span></span>

@@ -13,14 +13,19 @@ import {
 import { cn } from "@/lib/utils"
 import { MonthPicker } from "../ui/monthpicker"
 import { useCtx } from "@/state"
+import { ReactNode } from "react"
 
-export default function () {
+type Props = {
+    className?: ReactNode
+}
+
+export default function ({ className }: Props) {
     const { date, updateDate } = useCtx()
 
     return (
         <Popover>
             <PopoverTrigger asChild>
-                <Button variant={"outline"} className={cn("w-[180px] justify-start text-left font-normal rounded-sm bg-muted cursor-default hover:bg-muted", !date && "text-muted-foreground")}>
+                <Button variant={"outline"} className={cn("w-[180px] justify-start text-left font-normal rounded-sm bg-muted cursor-default hover:bg-muted", !date && "text-muted-foreground", className)}>
                     <CalendarIcon className="mr-2 h-4 w-4" />
                     {date ? format(date, "MMM yyyy") : <span>Pick a month</span>}
                 </Button>

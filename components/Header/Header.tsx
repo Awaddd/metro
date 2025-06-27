@@ -16,20 +16,22 @@ export default async function () {
 
     return (
         <SidebarInset>
-            <header className="flex flex-col lg:flex-row lg:h-[70px] shrink-0 lg:items-end lg:justify-between gap-2 pb-0.5 bg-sidebar">
-                <div className="flex flex-col w-full lg:flex-row p-4 lg:py-0 items-center lg:justify-start text-center gap-2">
-                    <SidebarTrigger className="-ml-1 cursor-pointer" />
-                    <Separator
-                        orientation="vertical"
-                        className="data-[orientation=vertical]:h-4 bg-gray-900/50"
-                    />
-                    <h2 className="px-2">Overview</h2>
-                    <SelectedDate />
+            <header className="flex flex-col lg:flex-row lg:h-[70px] shrink-0 lg:items-end lg:justify-between gap-4 pt-6 pb-0.5 bg-sidebar">
+                <div className="flex flex-col items-center justify-center lg:justify-start w-full lg:flex-row px-4 lg:py-0 text-center gap-2 lg:gap-2">
+                    <div className="flex items-center justify-center lg:justify-start lg:flex-row px-4 lg:px-0 lg:py-0 text-center gap-2">
+                        <SidebarTrigger className="-ml-1 cursor-pointer" />
+                        <Separator
+                            orientation="vertical"
+                            className="data-[orientation=vertical]:h-4 bg-gray-900/50"
+                        />
+                        <h2 className="px-2">Overview</h2>
+                    </div>
+                    <SelectedDate className="flex lg:hidden xl:flex xl:flex-row items-center xl:justify-start text-center gap-2" />
                 </div>
-                <div className="lg:pr-2 xl:pr-8 flex flex-col lg:flex-row items-center justify-center gap-2">
-                    <DatePicker />
-                    <AgeRange />
-                    <Type />
+                <div className="lg:pr-8 flex flex-col md:flex-row px-4 items-center justify-center gap-2">
+                    <DatePicker className="w-full md:max-w-[180px]" />
+                    <AgeRange className="w-full md:max-w-[180px]" />
+                    <Type className="w-full md:max-w-[180px]" />
                 </div>
             </header>
         </SidebarInset>
