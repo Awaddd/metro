@@ -17,13 +17,13 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body className="antialiased bg-background text-foreground overflow-hidden">
+            <body className="antialiased bg-background text-foreground">
                 <Providers>
                     <SidebarProvider>
                         <Sidebar />
                         <div className="w-full">
                             <Header />
-                            <div className="h-[calc(100vh-70px)] lg:h-[calc(100vh-70px)] p-2">
+                            <div className="2xl:h-[calc(100vh-70px)] p-2">
                                 <main className="h-full rounded-xl bg-background border overflow-auto">{children}</main>
                             </div>
                         </div>
