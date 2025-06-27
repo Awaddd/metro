@@ -27,17 +27,15 @@ export default function () {
         setFact(`${percentage.toFixed(2)}% of all searches involve "${label}"`)
     }, [data?.statistics.objectsOfSearch, data?.statistics.totalSearches])
 
-    if (!fact) {
-        return null
-    }
-
     return (
         <div className="w-full min-h-full pt-6 pb-4 px-6 bg-card border shadow-xs rounded-lg">
             <div className="flex items-center gap-4">
                 <Zap size={isMobile ? 32 : 48} className="stroke-primary fill-yellow-300" />
                 <h1 className="text-card-foreground text-3xl xl:text-4xl font-black">Did you know?</h1>
             </div>
-            <p className="mt-4 text-card-foreground/80 text-lg lg:text-xl font-medium">{fact}</p>
+            <div className="min-h-6 mt-4">
+                <p className="text-card-foreground/80 text-lg lg:text-xl font-medium">{fact}</p>
+            </div>
         </div>
     )
 }
