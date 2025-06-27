@@ -13,6 +13,7 @@ export default function () {
 
     useEffect(() => {
         if (!data?.statistics.objectsOfSearch || !data?.statistics.totalSearches) {
+            setFact("No data available")
             return
         }
 

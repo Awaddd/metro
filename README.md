@@ -143,6 +143,8 @@ This was my second attempt. The first attempt used batches of 10, which pushed t
 
 - clean up the codebase
 
+- make use of suspense and error boundaries to improve percieved performance and UX. Skeleton loaders, error versions of the data components etc
+
 ```
 {
     id: "evidence-of-offenses-under-the-act",
