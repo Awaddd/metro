@@ -21,7 +21,7 @@ export default async function Home() {
         <HydrationBoundary state={dehydrate(queryClient)}>
             <div className="h-full flex flex-grow flex-col gap-4 items-start">
                 <div className="flex flex-col h-full w-full gap-2.5 p-4">
-                    <section className="w-full h-full flex flex-col flex-1 lg:grid lg:grid-cols-2 gap-2">
+                    <section className="w-full h-full flex flex-col flex-1 lg:grid lg:grid-cols-2 xl:grid-cols-4 gap-2">
                         <PanelGrid />
                     </section>
                     <section className="w-full h-full flex flex-1">
