@@ -30,8 +30,8 @@ export default async function () {
                 </div>
                 <div className="lg:pr-8 flex flex-col md:flex-row px-4 items-center justify-center gap-2">
                     <DatePicker className="w-full md:max-w-[180px]" />
-                    <AgeRange className="w-full md:max-w-[180px]" />
-                    <Type className="w-full md:max-w-[180px]" />
+                    <AgeRange className="w-full md:max-w-[180px] bg-background cursor-default hover:bg-muted/20" />
+                    <Type className="w-full md:max-w-[180px] bg-background cursor-default hover:bg-muted/20" />
                 </div>
             </header>
         </SidebarInset>
