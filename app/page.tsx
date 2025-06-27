@@ -2,12 +2,13 @@ import GenderPieChart from "@/components/GenderPieChart";
 import HorizontalBarChart from "@/components/HorizontalBarChart";
 import InfoCard from "@/components/InfoCard";
 import PanelGrid from "@/components/PanelGrid";
-import RadarChart from "@/components/RadarChart";
-import { getQueryClient } from "./get-query-client";
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import RadialChart from "@/components/RadialChart";
 import { getQueryKey } from "@/lib/get-query-key";
 import getStopSearchData from "@/queries/get-stop-search-data";
-import RadialChart from "@/components/RadialChart";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { getQueryClient } from "./get-query-client";
+
+export const dynamic = "force-dynamic";
 
 export default async function Home() {
     const queryClient = getQueryClient()
