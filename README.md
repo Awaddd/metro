@@ -118,6 +118,17 @@ if (stale && hasData) {
 }
 ```
 
+## Notes 4
+
+Ran the fetch and persist script. Fetched all available data (28 months worth). This is how it turned out:
+
+- Data is fetched in batches of 7 months to stay within API rate limits.
+- Fetching all 28 months of data takes around 20 to 22 seconds.
+- Calculating statistics after fetch takes about 30 seconds.
+- Around 440 aggregated records are inserted into the database each run.
+
+This was my second attempt. The first attempt used batches of 10, which pushed too close to the API limit and caused a failure (we lost one month). Dropping batch size to 7 caused it to run smoothly. Another potential improvement is to add a delay between each batch.
+
 ## Things I would have added given time
 
 - show stale data while kicking off a request to an external application to write to cache. Make use of locks and transactions to avoid race conditions and ensure all steps of the write take place i.e. removing previous data, adding new and updating meta
