@@ -94,3 +94,30 @@ filterStatistics: 0.455ms
 As you can see, the bulk of the time is on the fetch. This would only happen when the cache is completely empty. We can improve the UX so that if data is stale, we fetch in background and indicate that to the user and show stale data in the mean time. If cache is present, things should load immediately as we are barely dealing with any files, 90 in this case.
 
 Now when loading from cache, the whole read takes 48.423ms
+
+## Notes 3
+
+Decided to move the whole write to cache operation to a cron job, hosted on dokploy on my VPS. The reason for this is separation of concerns and to move complexity away from the client. The client is singularly responsible for displaying data, filtered or otherwise. The cron job is responsible for populating the data. This model allows me to avoid strange behaviour and to simplify the implementation, making it easier to maintain. If there's an issue with writing to cache, I can investigate the cron job script, and any issues with displaying the data will lead me to looking into the frontend.
+
+I also ran into race conditions when deploying with the previous strategy. Because my app couldn’t connect to Mongo initially (due to IP not being whitelisted), it tried fetching data directly from the Police API to create a new cache. I refreshed multiple times while debugging, which caused multiple parallel requests. This could have potentially locked me out of the Police API and hit rate limits. It’s better to avoid expensive client-side operations that risk wasting resources, especially in a real production environment.
+
+## Concept
+
+Show stale data and fetch in background, updating ui on completion
+
+Example:
+
+```
+if (stale && hasData) {
+
+  // if the current cache is stale but it has data, return the stale data,
+  // trigger a fetch to happen in the background
+  // and inform the user visually
+
+  runInBackground(() => fetchAndPersist(db));
+
+  // need a mechanism to change the stale property displayed to the user when this is completed
+
+  // so the frontend knows to show new data and stop showing "showing stale data, fetching in the background"
+}
+```

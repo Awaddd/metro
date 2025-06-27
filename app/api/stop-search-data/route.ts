@@ -66,33 +66,7 @@ async function getData(filters: FilterParams) {
 
   const { stale, hasData, lastUpdated } = await validateCache(db);
 
-  // Concept: Show stale data and fetch in background, updating ui on completion
-  //
-  //    Example:
-  //
-  //    if (stale && hasData) {
-  //      // if the current cache is stale but it has data, return the stale data,
-  //      // trigger a fetch to happen in the background
-  //      // and inform the user visually
-  //      runInBackground(() => fetchAndPersist(db));
-  //      // need a mechanism to change the stale property displayed to the user when this is completed
-  //      // so the frontend knows to show new data and stop showing "showing stale data, fetching in the background"
-  //    }
-
-  // going forward, we will only fetch data if there is no data in cache
-  // if we had time, we would do the fetch in background stuff while showing the user the data is stale
-  // for now, in the absolute edge case that there is no data in cache and the cron failed
-  // we will fetch new data and make the user wait for it
-  // even if the cron job and mongo cache is reliable, we need this fallback
-
-  //   temporarily disable write to fetch and persist
-  //   if (stale) {
-  //     console.log("stale, no data... fetching data and waiting");
-  //     await fetchAndPersist(db);
-  //   } else {
-  //     console.log("fresh cached data is available, loading from cache...");
-  //   }
-
+  // load data from cache, never write to it from a client. the cron job will be responsible for this
   const data = await loadFromCache(db);
 
   const filtersAreApplied = !!(
