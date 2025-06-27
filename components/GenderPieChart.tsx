@@ -65,7 +65,7 @@ export default function () {
             chartConfig,
             percentage
         }
-    }, [data?.statistics.genders])
+    }, [data?.statistics])
 
     return (
         <Card className="flex flex-col w-full">

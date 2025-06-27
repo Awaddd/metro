@@ -25,10 +25,10 @@ export default function () {
         const label = !key || key == "null" ? "other" : key
 
         setFact(`${percentage.toFixed(2)}% of all searches involve "${label}"`)
-    }, [data?.statistics.objectsOfSearch])
+    }, [data?.statistics.objectsOfSearch, data?.statistics.totalSearches])
 
     if (!fact) {
-        return
+        return null
     }
 
     return (

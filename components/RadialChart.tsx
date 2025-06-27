@@ -62,7 +62,8 @@ export default function () {
             percentage,
             mostSearchedObject: data.statistics.mostSearchedObject
         }
-    }, [data?.statistics.genders])
+    }, [data?.statistics])
+
     return (
         <Card className="flex flex-col w-full">
             <CardHeader className="items-center pb-0">
