@@ -1,24 +1,15 @@
-import {
-  ALLOWED_AGE_RANGES,
-  ALLOWED_TYPES,
-} from "./../../../types/stop-search";
-import { runInBackground } from "@/lib/helpers";
 import client from "@/lib/mongodb";
-import {
-  validateCache,
-  loadFromCache,
-  persist,
-} from "@/services/stopSearch/cache";
-import { fetchStopSearchData } from "@/services/stopSearch/fetch";
-import { transformData } from "@/services/stopSearch/transform";
+import { loadFromCache, validateCache } from "@/services/stopSearch/cache";
 import {
   FilteredStatistic,
   FilterParams,
   StatisticDocument,
 } from "@/types/stats";
-import { StopSearchData } from "@/types/stop-search";
-import { Db } from "mongodb";
 import { NextResponse } from "next/server";
+import {
+  ALLOWED_AGE_RANGES,
+  ALLOWED_TYPES,
+} from "./../../../types/stop-search";
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
@@ -84,123 +75,6 @@ async function getData(filters: FilterParams) {
     stale,
     lastUpdated,
   };
-}
-
-async function fetchAndPersist(db: Db) {
-  console.time("overallFetchAndPersistComputedStatistics");
-  const freshData = await fetchStopSearchData();
-  const transformed = freshData.map(transformData);
-  const statistics = calculateStatistics(transformed);
-  await persist(db, statistics);
-  console.timeEnd("overallFetchAndPersistComputedStatistics");
-}
-
-function calculateStatistics(data: StopSearchData[]) {
-  console.time("calculateStatistics");
-
-  // create sets to collect all possible filters
-  const uniqueMonths = new Set<string>();
-  const uniqueAgeGroups = new Set<StopSearchData["ageRange"]>();
-  const uniqueTypes = new Set<StopSearchData["type"]>();
-
-  for (const item of data) {
-    uniqueMonths.add(item.datetime.slice(0, 7));
-    uniqueAgeGroups.add(item.ageRange);
-    uniqueTypes.add(item.type);
-  }
-
-  const statistics: StatisticDocument[] = [];
-
-  // precompute statistics for each filter combination
-  for (const month of uniqueMonths) {
-    for (const ageGroup of uniqueAgeGroups) {
-      for (const type of uniqueTypes) {
-        // try to find an item in testData where the month, ageGroup and type are the same
-
-        const matchedItems = [];
-
-        // when determining uniqye days, slice date instead of formatting with date-fns for improved performance
-        // creating a date obj and formatting each would add unnecessary computation
-        // especially since we are dealing with many records
-        const uniqueDays = new Set();
-        const uniqueGenders = new Set();
-        const uniqueObjects = new Set();
-        const uniqueOutcomes = new Set();
-
-        let arrestCount = 0;
-        const ages = new Map<string, number>();
-        const genders = new Map<string, number>();
-        const objectsOfSearch = new Map<string, number>();
-        const outcomes = new Map<string, number>();
-
-        // do all calculations in one loop as we are going through a huge number of records
-        // so inefficient to calculate separately
-        for (const item of data) {
-          if (
-            !(
-              item.datetime.includes(month) &&
-              item.ageRange === ageGroup &&
-              item.type === type
-            )
-          ) {
-            continue;
-          }
-
-          matchedItems.push(item);
-
-          uniqueDays.add(item.datetime.slice(0, 10));
-          uniqueGenders.add(item.gender);
-          uniqueObjects.add(item.objectOfSearch);
-          uniqueOutcomes.add(item.outcome);
-
-          if (item.outcome?.toLowerCase() === "arrest") {
-            arrestCount += 1;
-          }
-
-          const key = item.ageRange == null ? "null" : item.ageRange;
-          ages.set(key, (ages.get(key) ?? 0) + 1);
-
-          const genderKey = item.gender == null ? "null" : item.gender;
-          genders.set(genderKey, (genders.get(genderKey) ?? 0) + 1);
-
-          // this is getting repetitive, clean up this file and make reusable function
-          const objectKey =
-            item.objectOfSearch == null ? "null" : item.objectOfSearch;
-
-          objectsOfSearch.set(
-            objectKey,
-            (objectsOfSearch.get(objectKey) ?? 0) + 1
-          );
-
-          const outcomeKey = item.outcome == null ? "null" : item.outcome;
-          outcomes.set(outcomeKey, (genders.get(outcomeKey) ?? 0) + 1);
-        }
-
-        const totalSearches = matchedItems.length;
-
-        if (matchedItems.length === 0) {
-          continue;
-        }
-
-        const statistic: StatisticDocument = {
-          month: month,
-          ageRange: ageGroup,
-          type: type,
-          totalSearches: totalSearches,
-          arrests: arrestCount,
-          daysWithData: uniqueDays.size,
-          genders: genders,
-          objectsOfSearch: objectsOfSearch,
-          outcomes: outcomes,
-        };
-
-        statistics.push(statistic);
-      }
-    }
-  }
-
-  console.timeEnd("calculateStatistics");
-  return statistics;
 }
 
 function lookUp(data: StatisticDocument[], filters: FilterParams) {

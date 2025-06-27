@@ -124,6 +124,8 @@ if (stale && hasData) {
 
 - move the current filter parameters to the url i.e. ?date=2024-08
 
+- share types across both the main nextjs application and the cron job to write to cache
+
 - button near the date filter to automatically filter to the month with the latest records i.e. august 2024
 
 - use ai to change statistic labels such as "Evidence of offenses under the act" to something more concise i.e. "Offenses". We would first get all of the unique possible values and then send them off to an ai agent to simplify them for us, giving us data such as:
