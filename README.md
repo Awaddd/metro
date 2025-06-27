@@ -18,7 +18,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ## Tool choice
 
-- MongoDB - persist aggregated data from all queries, revalidating this data on a daily basis to keep up to date with the police stop and search api. Considered storing the data in a json file or a json blob in an SQL database, and also storing in normalised columns in an SQL database. Each approach had issues, i.e. the simple deployment solutions I'd like to use such as vercel don't allow write access or only allow access to writing to a temp file with limited size. Hence the move to databases; NoSQL is faster and I'm dealing with many records which is the primary reason for using MongoDB over solutions such as PostgreSQL. Also, it's quicker to get started and deploy because it's schemaless and has a dedicated cloud environment (atlas).
+- MongoDB - persist aggregated data from all queries, revalidating this data on a regular basis to keep up to date with the police stop and search api. Considered storing the data in a json file or a json blob in an SQL database, and also storing in an SQL database. Each approach had issues, i.e. the simple deployment solutions I'd like to use such as vercel don't allow write access or only allow access to writing to a temp file with limited size. Hence the move to databases; NoSQL is faster and I'm dealing with many records which is the primary reason for using MongoDB over solutions such as PostgreSQL. Also, it's quicker to get started and deploy because it's schemaless and has a dedicated cloud environment (atlas).
 
 - React Query - client side query state shared across multiple components. The first component to make a request i.e. get stop search data with a date filter will propogate the changes to all the other components. The filtered data for that data will persist even if we query another date
 
@@ -27,10 +27,6 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 ## Why didn't I use Docker?
 
 In most cases I’d self-host and use Docker, writing the aggregated data to a json file. However, this assignment required a quick, reliable deployment path, and platforms like Vercel don’t support persistent local writes. To work around this, I used MongoDB Atlas as an external data store, which also simplified deployment and fit well with a serverless architecture.
-
-## What would I have done differently if I had time
-
-I would have wrapped some of my mongo calls in transactions to ensure data is added or removed together in unison if all operations succeed.
 
 ## Notes
 
@@ -121,3 +117,31 @@ if (stale && hasData) {
   // so the frontend knows to show new data and stop showing "showing stale data, fetching in the background"
 }
 ```
+
+## Things I would have added given time
+
+- show stale data while kicking off a request to an external application to write to cache. Make use of locks and transactions to avoid race conditions and ensure all steps of the write take place i.e. removing previous data, adding new and updating meta
+
+- move the current filter parameters to the url i.e. ?date=2024-08
+
+- button near the date filter to automatically filter to the month with the latest records i.e. august 2024
+
+- use ai to change statistic labels such as "Evidence of offenses under the act" to something more concise i.e. "Offenses". We would first get all of the unique possible values and then send them off to an ai agent to simplify them for us, giving us data such as:
+
+```
+{
+    id: "evidence-of-offenses-under-the-act",
+    truncated: "Offenses",
+    full: "Evidence of offenses under the act"
+}
+```
+
+This is more preferrable to my current approach of reducing to the first word, and showing the full label on hover
+
+- table with pagination
+
+- location filter
+
+- trends tab with line charts showing change in data
+
+- map view
