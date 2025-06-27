@@ -141,6 +141,8 @@ This was my second attempt. The first attempt used batches of 10, which pushed t
 
 - use ai to change statistic labels such as "Evidence of offenses under the act" to something more concise i.e. "Offenses". We would first get all of the unique possible values and then send them off to an ai agent to simplify them for us, giving us data such as:
 
+- clean up the codebase
+
 ```
 {
     id: "evidence-of-offenses-under-the-act",
