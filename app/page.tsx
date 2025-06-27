@@ -19,18 +19,20 @@ export default async function Home() {
 
     return (
         <HydrationBoundary state={dehydrate(queryClient)}>
-            <div className="min-h-full flex flex-grow flex-col items-start space-y-4 p-4">
+            <div className="min-h-full flex flex-grow flex-col xl:grid xl:grid-rows-[max-content_1fr_max-content] items-start xl:gap-2.5 p-4">
                 <section className="w-full grid lg:grid-cols-2 xl:grid-cols-4 gap-4">
                     <PanelGrid />
                 </section>
 
-                <section className="w-full flex flex-col xl:flex-row gap-4">
-                    <HorizontalBarChart />
-                    <RadialChart />
-                    <GenderPieChart />
+                <section className="w-full flex flex-col flex-grow gap-4">
+                    <div className="xl:grid xl:grid-cols-[1fr_1fr_1fr] gap-4 w-full">
+                        <HorizontalBarChart />
+                        <RadialChart />
+                        <GenderPieChart />
+                    </div>
                 </section>
 
-                <section className="w-full flex flex-grow flex-col xl:flex-row gap-4">
+                <section className="w-full flex flex-col xl:flex-row gap-4">
                     <InfoCard />
                 </section>
             </div>

@@ -65,7 +65,7 @@ export default function () {
     }, [data?.statistics])
 
     return (
-        <Card className="flex flex-col w-full">
+        <Card className="relative flex flex-col w-full pb-0">
             <CardHeader className="items-center pb-0">
                 <CardTitle>Most common searched object</CardTitle>
                 <CardDescription>This chart shows the most common searched object for the Metropolitan Police Force</CardDescription>
@@ -123,20 +123,20 @@ export default function () {
                         </PolarRadiusAxis>
                     </RadialBarChart>
                 </ChartContainer>
-            </CardContent>
-            <CardFooter className="flex-col gap-2 text-sm">
-                {percentage && (
-                    <div className="flex items-center gap-2 leading-none font-medium">
-                        {percentage?.toFixed(0)}% of all searches were for {mostSearchedObject.toLowerCase()}
-                        {percentage > 50 && (
-                            <TrendingUp className="h-4 w-4" />
-                        )}
+                <div className="absolute bottom-7 left-0 w-full flex flex-col items-center gap-2 text-sm">
+                    {percentage && (
+                        <div className="flex items-center gap-2 leading-none font-medium">
+                            {percentage?.toFixed(0)}% of all searches were for {mostSearchedObject.toLowerCase()}
+                            {percentage > 50 && (
+                                <TrendingUp className="h-4 w-4" />
+                            )}
+                        </div>
+                    )}
+                    <div className="text-muted-foreground leading-none">
+                        Showing most common object of search for the data set
                     </div>
-                )}
-                <div className="text-muted-foreground leading-none">
-                    Showing most common object of search for the data set
                 </div>
-            </CardFooter>
+            </CardContent>
         </Card>
     )
 }

@@ -68,7 +68,7 @@ export default function () {
     }, [data?.statistics])
 
     return (
-        <Card className="flex flex-col w-full">
+        <Card className="relative flex flex-col w-full">
             <CardHeader className="items-center pb-0">
                 <CardTitle>Genders</CardTitle>
                 <CardDescription>This chart shows the gender distribution for the Metropolitan Police Force</CardDescription>
@@ -88,6 +88,7 @@ export default function () {
                             dataKey="value"
                             nameKey="gender"
                             innerRadius={60}
+                            outerRadius={90}
                             strokeWidth={5}
                         >
                             <Label
@@ -122,20 +123,20 @@ export default function () {
                         </Pie>
                     </PieChart>
                 </ChartContainer>
-            </CardContent>
-            <CardFooter className="flex-col gap-2 text-sm">
-                {percentage && (
-                    <div className="flex items-center gap-2 leading-none font-medium">
-                        {data?.statistics.mostSearchedGender} makes up {percentage?.toFixed(0)}% of all searches
-                        {percentage > 50 && (
-                            <TrendingUp className="h-4 w-4" />
-                        )}
+                <div className="absolute bottom-7 left-0 w-full flex flex-col items-center gap-2 text-sm">
+                    {percentage && (
+                        <div className="flex items-center gap-2 leading-none font-medium">
+                            {data?.statistics.mostSearchedGender} makes up {percentage?.toFixed(0)}% of all searches
+                            {percentage > 50 && (
+                                <TrendingUp className="h-4 w-4" />
+                            )}
+                        </div>
+                    )}
+                    <div className="text-muted-foreground leading-none">
+                        Showing genders for the data set
                     </div>
-                )}
-                <div className="text-muted-foreground leading-none">
-                    Showing genders for the data set
                 </div>
-            </CardFooter>
+            </CardContent>
         </Card>
     )
 }

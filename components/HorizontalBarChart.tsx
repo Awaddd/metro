@@ -63,7 +63,7 @@ export default function () {
     }, [data?.statistics.objectsOfSearch])
 
     return (
-        <Card className="w-full">
+        <Card className="w-full h-full">
             <CardHeader>
                 <CardTitle>Object of search</CardTitle>
                 <CardDescription>This chart shows the object of search distribution for the Metropolitan Police Force</CardDescription>
@@ -72,7 +72,7 @@ export default function () {
                 <ChartContainer config={chartConfig ?? {}} className="h-full w-full">
                     <BarChart
                         data={chartData}
-                        margin={{ left: 40, bottom: 80 }}
+                        margin={{ left: 40, bottom: 70 }}
                     >
                         <CartesianGrid vertical={false} />
                         <XAxis
